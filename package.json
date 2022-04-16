@@ -1,0 +1,16 @@
+{
+  "name": "grafoavis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "serve ./public"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@innotrade/enapso-graphdb-client": "^1.8.6",
+    "serve": "^13.0.2",
+    "vis": "^4.21.0-EOL"
+  }
+}
