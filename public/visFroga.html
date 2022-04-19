@@ -3,7 +3,16 @@
   <head>
     <title>Network</title>
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script type="module">
+			import * as d3 from "https://cdn.skypack.dev/d3-sparql";
+			//https://cdn.skypack.dev/d3-sparql
+    	var eskaera = "SELECT ?s ?o ?p WHERE {?s ?o ?p}"
+    	var uri = "http://jonander:7200/repositories/LaDonacion"
+
+    	d3.sparql(uri, eskaera).then((data) => {
+  			console.log(data);
+			})
+		</script>
     <style type="text/css">
       #mynetwork {
         width: 600px;
@@ -16,13 +25,7 @@
     <div id="mynetwork"></div>
     <script type="text/javascript">
 
-    	eskaera = "SELECT {?s,?o,?p} WHERE {?s,?o,?p}"
-    	uri = "http://jonander:7200/repositories/LaDonacion"
-
-
-    	d3.sparql(uri, eskaera).then((data) => {
-  			console.log(data); // [{'developerName': 'Mike Bostock'}]
-			})
+    	
 
     	// create an array with nodes
     	var array = []
@@ -33,7 +36,6 @@
 
 		var nodes = new vis.DataSet(array);
 	  
-
 	    // create an array with edges
 	    var edges = new vis.DataSet([
 	      { from: 1, to: 3, label: "label1"},
