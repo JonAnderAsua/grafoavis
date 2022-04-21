@@ -9,50 +9,90 @@
     	var eskaera = "SELECT ?s ?o ?p WHERE {?s ?o ?p}"
     	var uri = "http://jonander:7200/repositories/LaDonacion"
 
+    	var arrayNodes = [];
+    	var arrayEdges = [];
+    	var arrayLabels = [];
+
     	d3.sparql(uri, eskaera).then((data) => {
-  			console.log(data);
-			})
+
+    		var i = 0;
+    		var iSubjektua = 0;
+    		var iObjektua = 0;
+  			data.forEach(function(triple,index){
+
+  				i++;
+  				//Triplearen subjektua kudeatu
+  				var subjektua = {id:i, label:triple["s"]};
+  				if(!arrayLabels.includes(triple["s"])){
+  					arrayLabels.push(triple["s"]);
+  					arrayNodes.push(subjektua);
+  					iSubjektua = i;
+  				}
+  				else{
+  					iSubjektua = getIndex(triple["s"],arrayNodes);
+  					console.log(iSubjektua);
+  				}
+
+
+  				i++;
+  				//Triplearen objektua kudeatu
+  				var objektua = {id:i, label:triple["o"]}
+  				if(!arrayLabels.includes(triple["o"])){
+  					arrayLabels.push(triple["o"]);
+  					arrayNodes.push(objektua);
+  					iObjektua = i;
+  				}
+  				else{
+  					iObjektua = getIndex(triple["o"],arrayNodes);
+  					console.log(iObjektua);
+  				}
+
+
+  				//Triplearen predikatua kudeatu
+  				var predikatua = {from:iSubjektua,to:iObjektua,label:triple["p"]};
+  				if(!arrayEdges.includes(predikatua)){
+  					arrayEdges.push(predikatua);
+  				} 
+  			})
+			
+
+		    var nodes = new vis.DataSet(arrayNodes);
+				var edges = new vis.DataSet(arrayEdges);
+
+				// create a network
+		    var container = document.getElementById("mynetwork");
+
+		    var options = {
+		    	autoResize: true,
+  				height: '100%',
+  				width: '100%',
+   				physics: {
+    				enabled: false
+   				}
+				};
+
+		    var data = {
+		      nodes: nodes,
+		      edges: edges,
+		    };
+		    var network = new vis.Network(container, data, options);
+
+		    function getIndex(subObjektua,array){
+		    	var emaitza = array.find(x => x.label === subObjektua);
+		    	return emaitza.id;
+
+		    }
+	   	})
 		</script>
     <style type="text/css">
       #mynetwork {
-        width: 600px;
-        height: 400px;
+        width: 1000px;
+        height: 1000px;
         border: 1px solid lightgray;
       }
     </style>
   </head>
   <body>
     <div id="mynetwork"></div>
-    <script type="text/javascript">
-
-    	
-
-    	// create an array with nodes
-    	var array = []
-		for(var i = 1; i < 6 ; i++){
-			var node = { id: i, label: "Node "+ i }
-			array.push(node);
-		}
-
-		var nodes = new vis.DataSet(array);
-	  
-	    // create an array with edges
-	    var edges = new vis.DataSet([
-	      { from: 1, to: 3, label: "label1"},
-	      { from: 1, to: 2 },
-	      { from: 2, to: 4 },
-	      { from: 2, to: 5 },
-	      { from: 3, to: 3 },
-	    ]);
-
-	    // create a network
-	    var container = document.getElementById("mynetwork");
-	    var data = {
-	      nodes: nodes,
-	      edges: edges,
-	    };
-	    var options = {};
-	    var network = new vis.Network(container, data, options);
-    </script>
   </body>
 </html>
