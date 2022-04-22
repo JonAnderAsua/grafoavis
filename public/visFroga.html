@@ -3,8 +3,10 @@
   <head>
     <title>Network</title>
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script type="./js/edges.js"></script>
     <script type="module">
 			import * as d3 from "https://cdn.skypack.dev/d3-sparql";
+			import Node from './js/nodes.js'
 			//https://cdn.skypack.dev/d3-sparql
     	var eskaera = "SELECT ?s ?o ?p WHERE {?s ?o ?p}"
     	var uri = "http://jonander:7200/repositories/LaDonacion"
@@ -13,6 +15,8 @@
     	var arrayEdges = [];
     	var arrayLabels = [];
 
+    	var arrayNodesObject = [];
+
     	d3.sparql(uri, eskaera).then((data) => {
 
     		var i = 0;
@@ -20,39 +24,71 @@
     		var iObjektua = 0;
   			data.forEach(function(triple,index){
 
-  				i++;
-  				//Triplearen subjektua kudeatu
-  				var subjektua = {id:i, label:triple["s"]};
-  				if(!arrayLabels.includes(triple["s"])){
-  					arrayLabels.push(triple["s"]);
-  					arrayNodes.push(subjektua);
-  					iSubjektua = i;
-  				}
-  				else{
-  					iSubjektua = getIndex(triple["s"],arrayNodes);
-  					console.log(iSubjektua);
-  				}
 
 
-  				i++;
-  				//Triplearen objektua kudeatu
-  				var objektua = {id:i, label:triple["o"]}
-  				if(!arrayLabels.includes(triple["o"])){
-  					arrayLabels.push(triple["o"]);
-  					arrayNodes.push(objektua);
-  					iObjektua = i;
-  				}
-  				else{
-  					iObjektua = getIndex(triple["o"],arrayNodes);
-  					console.log(iObjektua);
-  				}
+					if(!triple["o"].includes("https://schema.org/")){
+						if(!triple["o"].includes("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")){
+							if(!triple["o"].includes("http://www.w3.org/2000/01/rdf-schema#label")){
+								if(!triple["o"].includes("http://www.w3.org/2000/01/rdf-schema#comment")){
+									if(!triple["o"].includes("http://proton.semanticweb.org/protonsys#transitiveOver")){
 
 
-  				//Triplearen predikatua kudeatu
-  				var predikatua = {from:iSubjektua,to:iObjektua,label:triple["p"]};
-  				if(!arrayEdges.includes(predikatua)){
-  					arrayEdges.push(predikatua);
-  				} 
+  				console.log("Subjektu: " + triple["s"])
+					console.log("Objektu: " + triple["o"]);
+					console.log("Predikatu: " + triple["p"])
+
+					  				i++;
+
+					  				//Triplearen subjektua kudeatu
+					  				if(!arrayLabels.includes(triple["s"])){
+					  					
+					  					
+					  					iSubjektua = i;
+
+					  					var node = new Node(triple["s"]);
+
+					  					getType(triple["s"]).then((data) => {
+					  						node.type = data;
+					  					})
+
+					  					getLabel(triple["s"]).then((data) => {
+					  						node.label = data;
+					  					})
+
+					  					getComment(triple["s"]).then((data) => {
+					  						node.comment = data;
+					  					})
+
+					  					var subjektua = {id:i, label:triple["s"]};
+					  					arrayNodes.push(subjektua);
+					  					arrayLabels.push(triple["s"]);
+
+					  				}
+					  				else{
+					  					iSubjektua = getIndex(triple["s"],arrayNodes);
+					  				}
+
+
+					  				i++;
+					  				//Triplearen objektua kudeatu
+					  				var objektua = {id:i, label:triple["p"]}
+					  				if(!arrayLabels.includes(triple["p"])){
+					  					arrayLabels.push(triple["p"]);
+					  					arrayNodes.push(objektua);
+					  					iObjektua = i;
+					  				}
+					  				else{
+					  					iObjektua = getIndex(triple["p"],arrayNodes);
+					  				}
+
+					  				//Triplearen predikatua kudeatu
+					  				var predikatua = {from:iSubjektua,to:iObjektua,label:triple["o"]};
+										arrayEdges.push(predikatua);
+	  							}
+	  						}
+	  					}
+						}
+	  			} 
   			})
 			
 
@@ -76,13 +112,70 @@
 		      edges: edges,
 		    };
 		    var network = new vis.Network(container, data, options);
-
-		    function getIndex(subObjektua,array){
-		    	var emaitza = array.find(x => x.label === subObjektua);
-		    	return emaitza.id;
-
-		    }
 	   	})
+
+	   	function getIndex(subObjektua,array){
+		    	var emaitza = arrayNodes.find(x => x.label === subObjektua);
+		    	return emaitza.id;
+		  }
+
+		  function getType(uriObjektua){
+		  	var eskaeraType = `
+		  	PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+		  	SELECT ?type
+		  	WHERE{
+		  		<`+uriObjektua+`> rdf:type ?type .
+		  	}`
+
+		  	return d3.sparql(uri, eskaeraType).then((data) => {
+		  		if(data.length > 0){
+			  		return data[0]['type'];
+		  		}
+		  		else{
+		  			return "Ez dauka typeik";
+		  		}
+		  	});
+
+		  }
+
+		  function getLabel(uriObjektua){
+		  	var eskaeraType = `
+		  	PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+		  	SELECT ?label
+		  	WHERE{
+		  		<`+uriObjektua+`> rdfs:label ?label .
+		  	}`
+
+		  	return d3.sparql(uri, eskaeraType).then((data) => {
+		  		if(data.length > 0){
+			  		return data[0]['label'];
+		  		}
+		  		else{
+		  			return "Ez dauka labelik";
+		  		}
+		  	});
+
+		  }
+
+		  function getComment(uriObjektua){
+		  	var eskaeraType = `
+		  	PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+		  	SELECT ?comment
+		  	WHERE{
+		  		<`+uriObjektua+`> rdfs:comment ?comment .
+		  	}`
+
+		  	return d3.sparql(uri, eskaeraType).then((data) => {
+		  		if(data.length > 0){
+			  		return data[0]['comment'];
+		  		}
+		  		else{
+		  			return "Ez dauka komentariorik";
+		  		}
+		  	});
+
+		  }
+
 		</script>
     <style type="text/css">
       #mynetwork {
