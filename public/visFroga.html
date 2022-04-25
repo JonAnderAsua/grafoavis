@@ -17,82 +17,54 @@
 
     	var arrayNodesObject = [];
 
-    	d3.sparql(uri, eskaera).then((data) => {
+    	d3.sparql(uri, eskaera).then((data) => { //Tripleak graphdbtik atera
 
-    		var i = 0;
+    		var i = 1;
     		var iSubjektua = 0;
     		var iObjektua = 0;
   			data.forEach(function(triple,index){
 
 
 
-					if(!triple["o"].includes("https://schema.org/")){
-						if(!triple["o"].includes("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")){
-							if(!triple["o"].includes("http://www.w3.org/2000/01/rdf-schema#label")){
-								if(!triple["o"].includes("http://www.w3.org/2000/01/rdf-schema#comment")){
-									if(!triple["o"].includes("http://proton.semanticweb.org/protonsys#transitiveOver")){
+					if(!triple["o"].includes("https://schema.org/") && !triple["o"].includes("http://www.w3.org/1999/02/22-rdf-syntax-ns#type") && !triple["o"].includes("http://www.w3.org/2000/01/rdf-schema#label") && !triple["o"].includes("http://www.w3.org/2000/01/rdf-schema#comment") && !triple["o"].includes("http://proton.semanticweb.org/protonsys#transitiveOver")){
+
+					  //Triplearen subjektua kudeatu
+					  if(!arrayLabels.includes(triple["s"])){
+					  	getNode(triple["s"],i).then((data) => {
+					  		iSubjektua = i;
+							  i++;
+							  arrayNodes.push(data);
+							  arrayLabels.push(triple["s"]);
+					 		})				
+					  }
+					  else{
+					  	iSubjektua = getIndex(triple["s"],arrayNodes);
+					  }
 
 
-  				console.log("Subjektu: " + triple["s"])
-					console.log("Objektu: " + triple["o"]);
-					console.log("Predikatu: " + triple["p"])
-
-					  				i++;
-
-					  				//Triplearen subjektua kudeatu
-					  				if(!arrayLabels.includes(triple["s"])){
-					  					
-					  					
-					  					iSubjektua = i;
-
-					  					var node = new Node(triple["s"]);
-
-					  					getType(triple["s"]).then((data) => {
-					  						node.type = data;
-					  					})
-
-					  					getLabel(triple["s"]).then((data) => {
-					  						node.label = data;
-					  					})
-
-					  					getComment(triple["s"]).then((data) => {
-					  						node.comment = data;
-					  					})
-
-					  					var subjektua = {id:i, label:triple["s"]};
-					  					arrayNodes.push(subjektua);
-					  					arrayLabels.push(triple["s"]);
-
-					  				}
-					  				else{
-					  					iSubjektua = getIndex(triple["s"],arrayNodes);
-					  				}
+					  i++;
+					 	//Triplearen objektua kudeatu
+					 	if(!arrayLabels.includes(triple["p"])){
+					  	getNode(triple["p"],i).then((data) => {
+					  		iObjektua = i;
+							  i++;
+							  arrayNodes.push(data);
+							  arrayLabels.push(triple["p"]);
+					 		})				
+					  }
+					  else{
+					  	iObjektua = getIndex(triple["p"],arrayNodes);
+					  }
 
 
-					  				i++;
-					  				//Triplearen objektua kudeatu
-					  				var objektua = {id:i, label:triple["p"]}
-					  				if(!arrayLabels.includes(triple["p"])){
-					  					arrayLabels.push(triple["p"]);
-					  					arrayNodes.push(objektua);
-					  					iObjektua = i;
-					  				}
-					  				else{
-					  					iObjektua = getIndex(triple["p"],arrayNodes);
-					  				}
-
-					  				//Triplearen predikatua kudeatu
-					  				var predikatua = {from:iSubjektua,to:iObjektua,label:triple["o"]};
-										arrayEdges.push(predikatua);
-	  							}
-	  						}
-	  					}
-						}
-	  			} 
+					  //Triplearen predikatua kudeatu
+					  var predikatua = {from:iSubjektua,to:iObjektua,label:triple["o"]};
+							arrayEdges.push(predikatua);
+	  				}
+	  						
   			})
-			
-
-		    var nodes = new vis.DataSet(arrayNodes);
+	   	}).then(() => { //Grafoa eraiki
+	   		var nodes = new vis.DataSet(arrayNodes);
 				var edges = new vis.DataSet(arrayEdges);
 
 				// create a network
@@ -113,6 +85,27 @@
 		    };
 		    var network = new vis.Network(container, data, options);
 	   	})
+
+	   	function getNode(uri,i){
+		  	var type = "";
+				var label = "";
+				var comment = "";
+				var emaitza = "";
+
+				return getType(uri)
+					.then(function(data) {
+						type = data;
+						return getLabel(uri);
+					})
+					.then(function(data) {
+						label = data;
+						return getComment(uri);
+					})
+					.then((data) => {
+						var subjektua = new Node(uri,type,label,data,i);
+						return subjektua;
+					})
+		  }
 
 	   	function getIndex(subObjektua,array){
 		    	var emaitza = arrayNodes.find(x => x.label === subObjektua);
@@ -173,7 +166,6 @@
 		  			return "Ez dauka komentariorik";
 		  		}
 		  	});
-
 		  }
 
 		</script>
