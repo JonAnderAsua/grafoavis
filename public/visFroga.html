@@ -6,10 +6,8 @@
     <script type="./js/edges.js"></script>
     <script type="module">
 			import * as d3 from "https://cdn.skypack.dev/d3-sparql";
-			import Node from './js/nodes.js'
-			//https://cdn.skypack.dev/d3-sparql
-    	var eskaera = "SELECT ?s ?o ?p WHERE {?s ?o ?p}"
-    	var uri = "http://jonander:7200/repositories/LaDonacion"
+			import Node from './js/nodes.js';
+			import {getType,getLabel,getComment,getGuztia} from './js/db.js'
 
     	var arrayNodes = [];
     	var arrayEdges = [];
@@ -17,19 +15,17 @@
 
     	var arrayNodesObject = [];
 
-    	d3.sparql(uri, eskaera).then((data) => { //Tripleak graphdbtik atera
-
+    	//d3.sparql(uri, eskaera).then((data) => { //Tripleak graphdbtik atera
+    	getGuztia().then((data) => {
     		var i = 1;
     		var iSubjektua = 0;
     		var iObjektua = 0;
   			data.forEach(function(triple,index){
 
-
-
-					if(!triple["o"].includes("https://schema.org/") && !triple["o"].includes("http://www.w3.org/1999/02/22-rdf-syntax-ns#type") && !triple["o"].includes("http://www.w3.org/2000/01/rdf-schema#label") && !triple["o"].includes("http://www.w3.org/2000/01/rdf-schema#comment") && !triple["o"].includes("http://proton.semanticweb.org/protonsys#transitiveOver")){
+					if(!triple["p"].includes("https://schema.org/") && !triple["p"].includes("http://www.w3.org/1999/02/22-rdf-syntax-ns#type") && !triple["p"].includes("http://www.w3.org/2000/01/rdf-schema#label") && !triple["p"].includes("http://www.w3.org/2000/01/rdf-schema#comment") && !triple["o"].includes("http://proton.semanticweb.org/protonsys#transitiveOver")){
 
 					  //Triplearen subjektua kudeatu
-					  if(!arrayLabels.includes(triple["s"])){
+					  if(!arrayLabels.includes(triple["s"]) && triple["s"].includes("http")){
 					  	getNode(triple["s"],i).then((data) => {
 					  		iSubjektua = i;
 							  i++;
@@ -44,21 +40,20 @@
 
 					  i++;
 					 	//Triplearen objektua kudeatu
-					 	if(!arrayLabels.includes(triple["p"])){
-					  	getNode(triple["p"],i).then((data) => {
+					 	if(!arrayLabels.includes(triple["o"]) && triple["o"].includes("http")){
+					  	getNode(triple["o"],i).then((data) => {
 					  		iObjektua = i;
 							  i++;
 							  arrayNodes.push(data);
-							  arrayLabels.push(triple["p"]);
+							  arrayLabels.push(triple["o"]);
 					 		})				
 					  }
 					  else{
-					  	iObjektua = getIndex(triple["p"],arrayNodes);
+					  	iObjektua = getIndex(triple["o"],arrayNodes);
 					  }
 
-
 					  //Triplearen predikatua kudeatu
-					  var predikatua = {from:iSubjektua,to:iObjektua,label:triple["o"]};
+					  var predikatua = {from:iSubjektua,to:iObjektua,label:triple["p"]};
 							arrayEdges.push(predikatua);
 	  				}
 	  						
@@ -91,9 +86,11 @@
 				var label = "";
 				var comment = "";
 				var emaitza = "";
-
+				console.log(uri)
+				console.log("Entra getNode");
 				return getType(uri)
 					.then(function(data) {
+						console.log("Hace getType")
 						type = data;
 						return getLabel(uri);
 					})
@@ -110,62 +107,6 @@
 	   	function getIndex(subObjektua,array){
 		    	var emaitza = arrayNodes.find(x => x.label === subObjektua);
 		    	return emaitza.id;
-		  }
-
-		  function getType(uriObjektua){
-		  	var eskaeraType = `
-		  	PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-		  	SELECT ?type
-		  	WHERE{
-		  		<`+uriObjektua+`> rdf:type ?type .
-		  	}`
-
-		  	return d3.sparql(uri, eskaeraType).then((data) => {
-		  		if(data.length > 0){
-			  		return data[0]['type'];
-		  		}
-		  		else{
-		  			return "Ez dauka typeik";
-		  		}
-		  	});
-
-		  }
-
-		  function getLabel(uriObjektua){
-		  	var eskaeraType = `
-		  	PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-		  	SELECT ?label
-		  	WHERE{
-		  		<`+uriObjektua+`> rdfs:label ?label .
-		  	}`
-
-		  	return d3.sparql(uri, eskaeraType).then((data) => {
-		  		if(data.length > 0){
-			  		return data[0]['label'];
-		  		}
-		  		else{
-		  			return "Ez dauka labelik";
-		  		}
-		  	});
-
-		  }
-
-		  function getComment(uriObjektua){
-		  	var eskaeraType = `
-		  	PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-		  	SELECT ?comment
-		  	WHERE{
-		  		<`+uriObjektua+`> rdfs:comment ?comment .
-		  	}`
-
-		  	return d3.sparql(uri, eskaeraType).then((data) => {
-		  		if(data.length > 0){
-			  		return data[0]['comment'];
-		  		}
-		  		else{
-		  			return "Ez dauka komentariorik";
-		  		}
-		  	});
 		  }
 
 		</script>
