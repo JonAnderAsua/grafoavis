@@ -17,47 +17,50 @@
 
     	//d3.sparql(uri, eskaera).then((data) => { //Tripleak graphdbtik atera
     	getGuztia().then((data) => {
-    		var i = 1;
+    		var i = 0;
     		var iSubjektua = 0;
     		var iObjektua = 0;
   			data.forEach(function(triple,index){
 
+  				var subjektua = "";
+  				var predikatua = "";
+  				var objektua = "";
+
 					if(!triple["p"].includes("https://schema.org/") && !triple["p"].includes("http://www.w3.org/1999/02/22-rdf-syntax-ns#type") && !triple["p"].includes("http://www.w3.org/2000/01/rdf-schema#label") && !triple["p"].includes("http://www.w3.org/2000/01/rdf-schema#comment") && !triple["o"].includes("http://proton.semanticweb.org/protonsys#transitiveOver")){
 
 					  //Triplearen subjektua kudeatu
-					  if(!arrayLabels.includes(triple["s"]) && triple["s"].includes("http")){
+					  //if(!arrayLabels.includes(triple["s"]) && triple["s"].includes("http")){
 					  	getNode(triple["s"],i).then((data) => {
-					  		iSubjektua = i;
-							  i++;
-							  arrayNodes.push(data);
-							  arrayLabels.push(triple["s"]);
-					 		})				
-					  }
-					  else{
-					  	iSubjektua = getIndex(triple["s"],arrayNodes);
-					  }
+					  		subjektua = data;
+							  if(!arrayNodes.includes(data)){
+							  	i++;
+							  	arrayNodes.push(data);
+							  	arrayLabels.push(triple["s"]);
+							  	iSubjektua = i;
+							  }
+							  else{
+							  	iSubjektua = getIndex(triple["s"],arrayNodes);
+							  } 
+					 		}).then(() => {
+					 			getNode(triple["o"],i).then((data) => {
+					 				objektua = data;
+						  		iObjektua = i;
+								  if(!arrayNodes.includes(data)){
+					  				i++;
+									  arrayNodes.push(data);
+									  arrayLabels.push(triple["o"]);
+					  			}
+								  else{
+								  	iObjektua = getIndex(triple["o"],arrayNodes);
+								  }
+					 			}).then(() => {
+					 				predikatua = {from:subjektua.id,to:predikatua.id,label:triple["p"]};
+					 				arrayEdges.push(predikatua);
+					 			})
+					 		})
 
-
-					  i++;
-					 	//Triplearen objektua kudeatu
-					 	if(!arrayLabels.includes(triple["o"]) && triple["o"].includes("http")){
-					  	getNode(triple["o"],i).then((data) => {
-					  		iObjektua = i;
-							  i++;
-							  arrayNodes.push(data);
-							  arrayLabels.push(triple["o"]);
-					 		})				
-					  }
-					  else{
-					  	iObjektua = getIndex(triple["o"],arrayNodes);
-					  }
-
-					  //Triplearen predikatua kudeatu
-					  var predikatua = {from:iSubjektua,to:iObjektua,label:triple["p"]};
-							arrayEdges.push(predikatua);
-	  				}
-	  						
-  			})
+					 }
+					})
 	   	}).then(() => { //Grafoa eraiki
 	   		var nodes = new vis.DataSet(arrayNodes);
 				var edges = new vis.DataSet(arrayEdges);
@@ -86,11 +89,8 @@
 				var label = "";
 				var comment = "";
 				var emaitza = "";
-				console.log(uri)
-				console.log("Entra getNode");
 				return getType(uri)
 					.then(function(data) {
-						console.log("Hace getType")
 						type = data;
 						return getLabel(uri);
 					})
@@ -105,7 +105,7 @@
 		  }
 
 	   	function getIndex(subObjektua,array){
-		    	var emaitza = arrayNodes.find(x => x.label === subObjektua);
+		    	var emaitza = arrayNodes.find(x => x.uri === subObjektua);
 		    	return emaitza.id;
 		  }
 
