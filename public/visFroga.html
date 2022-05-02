@@ -13,55 +13,17 @@
     	var arrayEdges = [];
     	var arrayLabels = [];
 
-    	var arrayNodesObject = [];
-
-    	//d3.sparql(uri, eskaera).then((data) => { //Tripleak graphdbtik atera
     	getGuztia().then((data) => {
-    		var i = 0;
-    		var iSubjektua = 0;
-    		var iObjektua = 0;
-  			data.forEach(function(triple,index){
 
-  				var subjektua = "";
-  				var predikatua = "";
-  				var objektua = "";
-
-					if(!triple["p"].includes("https://schema.org/") && !triple["p"].includes("http://www.w3.org/1999/02/22-rdf-syntax-ns#type") && !triple["p"].includes("http://www.w3.org/2000/01/rdf-schema#label") && !triple["p"].includes("http://www.w3.org/2000/01/rdf-schema#comment") && !triple["o"].includes("http://proton.semanticweb.org/protonsys#transitiveOver")){
-
-					  //Triplearen subjektua kudeatu
-					  //if(!arrayLabels.includes(triple["s"]) && triple["s"].includes("http")){
-					  	getNode(triple["s"],i).then((data) => {
-					  		subjektua = data;
-							  if(!arrayNodes.includes(data)){
-							  	i++;
-							  	arrayNodes.push(data);
-							  	arrayLabels.push(triple["s"]);
-							  	iSubjektua = i;
-							  }
-							  else{
-							  	iSubjektua = getIndex(triple["s"],arrayNodes);
-							  } 
-					 		}).then(() => {
-					 			getNode(triple["o"],i).then((data) => {
-					 				objektua = data;
-						  		iObjektua = i;
-								  if(!arrayNodes.includes(data)){
-					  				i++;
-									  arrayNodes.push(data);
-									  arrayLabels.push(triple["o"]);
-					  			}
-								  else{
-								  	iObjektua = getIndex(triple["o"],arrayNodes);
-								  }
-					 			}).then(() => {
-					 				predikatua = {from:subjektua.id,to:predikatua.id,label:triple["p"]};
-					 				arrayEdges.push(predikatua);
-					 			})
-					 		})
-
-					 }
-					})
+    		aIterar(data).then(() => {
+  				console.log("Entra en el then")
+  				console.log(arrayNodes);
+  				console.log(arrayEdges);
+  				console.log("---------------");
+  			})
 	   	}).then(() => { //Grafoa eraiki
+
+	   		console.log("Entra en la construcción del grafo")
 	   		var nodes = new vis.DataSet(arrayNodes);
 				var edges = new vis.DataSet(arrayEdges);
 
@@ -84,24 +46,48 @@
 		    var network = new vis.Network(container, data, options);
 	   	})
 
-	   	function getNode(uri,i){
-		  	var type = "";
-				var label = "";
-				var comment = "";
-				var emaitza = "";
-				return getType(uri)
-					.then(function(data) {
-						type = data;
-						return getLabel(uri);
+	   	function aIterar(data){ //https://stackoverflow.com/questions/35318442/how-to-pass-parameter-to-a-promise-function
+	   		return new Promise(() => {
+	   			var i = 1;
+	   			data.forEach(function(triple,index){
+
+  				var subjektua = "";
+  				var predikatua = "";
+  				var objektua = "";
+
+					//Triplearen subjektua kudeatu
+					getNode(triple["s"],i).then((data) => {
+					  subjektua = data;
+					  subjektua.id = i;
+					  i++;
+						if(!arrayNodes.includes(data)){
+							arrayNodes.push(data);
+							arrayLabels.push(triple["s"]);
+						}
+					}).then(() => {
+					 	getNode(triple["o"],i).then((data) => {
+					 		objektua = data;
+					 		i++;
+							if(!arrayNodes.includes(data)){
+							arrayNodes.push(data);
+							arrayLabels.push(triple["o"]);
+					  }
+						}).then(() => {
+					 		predikatua = {from:subjektua.id,to:objektua.id,label:triple["p"]};
+					 		arrayEdges.push(predikatua);
+							})
+						})
 					})
-					.then(function(data) {
-						label = data;
-						return getComment(uri);
-					})
-					.then((data) => {
-						var subjektua = new Node(uri,type,label,data,i);
-						return subjektua;
-					})
+	   		})
+	   	}
+
+	   	async function getNode(uri,i){ //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Statements/async_function
+		  	var type = await getType(uri);
+				var label = await getLabel(uri);
+				var comment = await getComment(uri);
+
+				var subjektua = new Node(uri,type,label,comment,i);
+				return subjektua;
 		  }
 
 	   	function getIndex(subObjektua,array){

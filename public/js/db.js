@@ -64,10 +64,17 @@ function getGuztia(){
 	var eskaera = `
 	PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 	PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-	select ?s ?p ?o 
-	where { 
-		?s ?p ?o .
-    	FILTER(?p != rdf:type || ?p != rdfs:comment || ?p != rdfs:label)
+	select distinct ?s ?p ?o where { 
+	    ?s ?p ?o .
+	    FILTER(?p  NOT IN (<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, 
+	    <http://www.w3.org/2000/01/rdf-schema#subPropertyOf>,
+	    <http://www.w3.org/2000/01/rdf-schema#subClassOf>,
+	    <http://www.w3.org/2000/01/rdf-schema#label>,
+	    <http://www.w3.org/2000/01/rdf-schema#comment>,
+	    <http://proton.semanticweb.org/protonsys#transitiveOver>,
+	    <http://www.w3.org/2000/01/rdf-schema#domain>,
+	    <http://www.w3.org/2000/01/rdf-schema#range>,
+	    <http://www.w3.org/2002/07/owl#inverseOf>))
 	}`
 
 	return d3.sparql(uri,eskaera).then((data) => {
