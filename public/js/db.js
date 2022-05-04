@@ -4,8 +4,7 @@ export {getType,getLabel,getComment,getGuztia}
 
 var uri = "http://jonander:7200/repositories/LaDonacion"
 
-
-function getType(uriObjektua){
+function getType(uriObjektua){ //Elementu baten typea atera
 	var eskaeraType = `
 	PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 	SELECT ?type
@@ -24,7 +23,7 @@ function getType(uriObjektua){
 
 }
 
-function getLabel(uriObjektua){
+function getLabel(uriObjektua){ //Elementu baten labela atera
 	var eskaeraType = `
 		PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 		SELECT ?label
@@ -42,7 +41,7 @@ function getLabel(uriObjektua){
 	});
 }
 
-function getComment(uriObjektua){
+function getComment(uriObjektua){ //Elementu baten commenta atera
 	var eskaeraType = `
 		PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 		SELECT ?comment
@@ -60,7 +59,7 @@ function getComment(uriObjektua){
 	});
 }
 
-function getGuztia(){
+function getGuztia(){ //Aurreko metodoetan atera ez diren tripleak atera
 	var eskaera = `
 	PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 	PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>

@@ -5,29 +5,25 @@
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <script type="./js/edges.js"></script>
     <script type="module">
+
+		//Liburutegien inportazioa
 		import * as d3 from "https://cdn.skypack.dev/d3-sparql";
 		import {getType,getLabel,getComment,getGuztia} from './js/db.js'
 
     	var arrayEdges = []; //Vis onartzen dituen ertzak gordetzen ditu
     	var arrayLabels = []; //Vis onartzen dituen nodoak gordetzen ditu
 
+		//Tripleak atera eta kudeatu
     	getGuztia().then((data) => {
-
     		aIterar(data).then(() => {
-  				console.log("Entra en el then")
-  				console.log(arrayNodes);
-  				console.log(arrayEdges);
-  				console.log("---------------");
+				console.log("A")
   			})
 	   	}).then(() => { //Grafoa eraiki
-
-	   		console.log("Entra en la construcción del grafo")
 	   		var nodes = new vis.DataSet(arrayLabels);
 			var edges = new vis.DataSet(arrayEdges);
 
 			// create a network
 		    var container = document.getElementById("mynetwork");
-
 		    var options = {
 		    	autoResize: true,
   				height: '100%',
@@ -35,7 +31,7 @@
    				physics: {
     				enabled: false
    				}
-				};
+			};
 
 		    var data = {
 		      nodes: nodes,
@@ -48,49 +44,33 @@
 	   		return new Promise(() => {
 	   			var i = 1;
 	   			data.forEach(function(triple,index){
-
                     //Subjektua kudeatu
-                    var subjektua = {id:i,label:await getLabel(triple[s])}
-                    var iSubj = 0;
-                    if(!arrayLabels.includes(subjektua)){
-                        arrayLabels.push(subjektua);
-                        iSubj = i;
-                        i++;
-                    }
-                    else{
-                        iSubj = getIndex(subjektua.label);
-                    }
+                    var iSubj = kudeatuNodoak(triple['s']);
 
                     //Objektua kudeatu
-                    var objektua = {id:i,label:await getLabel(triple[o])}
-                    var iObj = 0;
-                    if(!arrayLabels.includes(objektua)){
-                        arrayLabels.push(objektua);
-                        iObj = i;
-                        i++;
-                    }
-                    else{
-                        iObj = getIndex(objektua.label);
-                    }
+					var iObj = kudeatuNodoak(triple['o'])
 
                     //Predikatua kudeatu
-                    var predikatua = {from:iSubj, to:iObj, label: triple[p]};
+                    var predikatua = {from:iSubj, to:iObj, label: triple['p']};
                     arrayEdges.push(predikatua)
                     
 				})
 	   		})
 	   	}
 
-	   	async function getNode(uri,i){ //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Statements/async_function
-		    var type = await getType(uri);
-			var label = await getLabel(uri);
-			var comment = await getComment(uri);
-
-			var subjektua = new Node(uri,type,label,comment,i);
-			return subjektua;
+		function kudeatuNodoak(izena, i){ //Subjektua eta objektua nodo bihurtu (igual hay que hacerla async)
+			var label = await getLabel(izena) //Lo separo pero me imagino que se podrá poner abajo
+            var nodoa = {id:i,label:label}
+            if(!arrayLabels.includes(nodoa)){
+                arrayLabels.push(nodoa);
+                return i;
+            }
+            else{
+                return getIndex(nodoa.label);
+            }
 		}
 
-	   	function getIndex(subObjektua){
+	   	function getIndex(subObjektua){ //Nodo jakin baten id-a atera
 		    var emaitza = arrayLabels.find(x => x.label === subObjektua);
 		    return emaitza.id;
 		}
