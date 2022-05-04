@@ -7,11 +7,10 @@
     <script type="module">
 
 		//Liburutegien inportazioa
-		import * as d3 from "https://cdn.skypack.dev/d3-sparql";
 		import {getType,getLabel,getComment,getGuztia} from './js/db.js'
 
     	var arrayEdges = []; //Vis onartzen dituen ertzak gordetzen ditu
-    	var arrayLabels = []; //Vis onartzen dituen nodoak gordetzen ditu
+    	var arrayNodes = []; //Vis onartzen dituen nodoak gordetzen ditu
 
 		//Tripleak atera eta kudeatu
     	getGuztia().then((data) => {
@@ -19,7 +18,7 @@
 				console.log("A")
   			})
 	   	}).then(() => { //Grafoa eraiki
-	   		var nodes = new vis.DataSet(arrayLabels);
+	   		var nodes = new vis.DataSet(arrayNodes);
 			var edges = new vis.DataSet(arrayEdges);
 
 			// create a network
@@ -46,9 +45,11 @@
 	   			data.forEach(function(triple,index){
                     //Subjektua kudeatu
                     var iSubj = kudeatuNodoak(triple['s']);
+					i++;
 
                     //Objektua kudeatu
 					var iObj = kudeatuNodoak(triple['o'])
+					i++;
 
                     //Predikatua kudeatu
                     var predikatua = {from:iSubj, to:iObj, label: triple['p']};
@@ -61,17 +62,17 @@
 		function kudeatuNodoak(izena, i){ //Subjektua eta objektua nodo bihurtu (igual hay que hacerla async)
 			var label = await getLabel(izena) //Lo separo pero me imagino que se podrá poner abajo
             var nodoa = {id:i,label:label}
-            if(!arrayLabels.includes(nodoa)){
-                arrayLabels.push(nodoa);
+            if(!arrayNodes.includes(nodoa)){ //Nodo berri bat agertzen bada
+                arrayNodes.push(nodoa);
                 return i;
             }
-            else{
+            else{ //Nodoa kudeatu bada haren identifikatzailea bueltatzen du
                 return getIndex(nodoa.label);
             }
 		}
 
 	   	function getIndex(subObjektua){ //Nodo jakin baten id-a atera
-		    var emaitza = arrayLabels.find(x => x.label === subObjektua);
+		    var emaitza = arrayNodes.find(x => x.label === subObjektua);
 		    return emaitza.id;
 		}
 
