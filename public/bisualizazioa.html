@@ -4,7 +4,6 @@
     <title>Network</title>
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <script type="module">
-
 		//Liburutegien importazioa
 		import {getType,getLabel,getComment,getGuztia} from './js/db.js'
 
@@ -16,7 +15,7 @@
     		var i = 0;
 	   		data.forEach(function(triple,index){
                 i++;
-                
+
                 //Subjektua kudeatu
                 var iSubj = kudeatuNodoak(triple['s']);
 				i++;
@@ -25,7 +24,7 @@
 				var iObj = kudeatuNodoak(triple['o'])
 
                 //Predikatua kudeatu
-                var predikatua = {from:iSubj, to:iObj, label: triple['p'], arrows:'to'};
+                var predikatua = {from:iSubj, to:iObj, label: getErlazioa(triple['p']), arrows:'to'};
                 arrayEdges.push(predikatua)
 
                 if(i >= data.length*2){ //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da) 
@@ -59,31 +58,9 @@
 		      nodes: nodes,
 		      edges: edges,
 		    };
+            
 		    var network = new vis.Network(container, data, options);
         }
-
-	   	function aIterar(data){ //https://stackoverflow.com/questions/35318442/how-to-pass-parameter-to-a-promise-function
-            //In: Eskaera ostean hartutako tripleen zerrenda
-            //Out: Triple horiek nodoak eta ertzak bihurtu
-
-	   		return new Promise(() => {
-	   			var i = 1;
-	   			data.forEach(function(triple,index){
-                    //Subjektua kudeatu
-                    var iSubj = kudeatuNodoak(triple['s']);
-					i++;
-
-                    //Objektua kudeatu
-					var iObj = kudeatuNodoak(triple['o'])
-					i++;
-
-                    //Predikatua kudeatu
-                    var predikatua = {from:iSubj, to:iObj, label: triple['p']};
-                    arrayEdges.push(predikatua)
-                    
-				})
-	   		})
-	   	}
 
 		function kudeatuNodoak(izena, i){ //Subjektua eta objektua nodo bihurtu (igual hay que hacerla async)
             //In: Elementu baten URIa eta identifikatzaile zenbaki bat
@@ -180,7 +157,6 @@
             }
             return emaitza;
         }
-
 	</script>
     <style type="text/css">
       #mynetwork {
