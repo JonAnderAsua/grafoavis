@@ -25,10 +25,11 @@
 				var iObj = kudeatuNodoak(triple['o'])
 
                 //Predikatua kudeatu
-                var predikatua = {from:iSubj, to:iObj, label: triple['p']};
+                var predikatua = {from:iSubj, to:iObj, label: triple['p'], arrows:'to'};
                 arrayEdges.push(predikatua)
 
-                if(i >= data.length/2){ //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da) 
+                if(i >= data.length*2){ //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da) 
+                    //Bider 2 egiten da triple bakoitza subjektu eta objektu elementuak dituelako
                     grafoaEraiki();
                 }
                     
@@ -38,11 +39,12 @@
         function grafoaEraiki(){
             //In: -
             //Out: Grafoa
-            
+
+            //Zerrendak dataset bihurtu
             var nodes = new vis.DataSet(arrayNodes);
 			var edges = new vis.DataSet(arrayEdges);
 
-			// create a network
+			// Sarea sortu
 		    var container = document.getElementById("mynetwork");
 		    var options = {
 		    	autoResize: true,
