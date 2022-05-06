@@ -17,27 +17,32 @@
                 i++;
 
                 //Subjektua kudeatu
-                var iSubj = kudeatuNodoak(triple['s']);
-				i++;
+                kudeatuNodoak(triple['s'],i).then((data) =>{
+                  i++;
+                  var iSubj = data;
 
-                //Objektua kudeatu
-				var iObj = kudeatuNodoak(triple['o'])
+                  //Objektua kudeatu
+                  kudeatuNodoak(triple['o'],i).then((data) => {
+                    var iObj = data
 
-                //Predikatua kudeatu
-                var predikatua = {from:iSubj, to:iObj, label: getErlazioa(triple['p']), arrows:'to'};
-                arrayEdges.push(predikatua)
-
-                if(i >= data.length*2){ //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da) 
-                    //Bider 2 egiten da triple bakoitza subjektu eta objektu elementuak dituelako
-                    grafoaEraiki();
-                }
-                    
+                    //Predikatua kudeatu
+                    var predikatua = {from:iSubj, to:iObj, label: getErlazioa(triple['p']), arrows:'to'};
+                    arrayEdges.push(predikatua)
+                    if(i >= data.length*2){ //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da)
+                      //Bider 2 egiten da triple bakoitza subjektu eta objektu elementuak dituelako
+                      grafoaEraiki();
+                    }
+                  })
+                })
 			})
 	   	})
 
         function grafoaEraiki(){
             //In: -
             //Out: Grafoa
+
+          console.log(arrayNodes)
+          console.log(arrayEdges)
 
             //Zerrendak dataset bihurtu
             var nodes = new vis.DataSet(arrayNodes);
@@ -62,7 +67,7 @@
 		    var network = new vis.Network(container, data, options);
         }
 
-		function kudeatuNodoak(izena, i){ //Subjektua eta objektua nodo bihurtu (igual hay que hacerla async)
+		async function kudeatuNodoak(izena, i){ //Subjektua eta objektua nodo bihurtu (igual hay que hacerla async)
             //In: Elementu baten URIa eta identifikatzaile zenbaki bat
             //Out: Elementu hori zerrenda batean gorde eha haren identifikatzailea bueltatzen du
 
