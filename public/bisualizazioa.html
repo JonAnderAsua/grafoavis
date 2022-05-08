@@ -10,39 +10,40 @@
     	var arrayEdges = []; //Vis onartzen dituen ertzak gordetzen ditu
     	var arrayNodes = []; //Vis onartzen dituen nodoak gordetzen ditu
 
-		//Tripleak atera eta kudeatu
-    	getGuztia().then((data) => {
-    		var i = 0;
-	   		data.forEach(function(triple,index){
-                i++;
+        var i = 0;
 
-                //Subjektua kudeatu
-                kudeatuNodoak(triple['s'],i).then((data) =>{
-                  i++;
-                  var iSubj = data;
+		aFuncionar();
+    	
+        async function aFuncionar() {
+            getGuztia().then((data) => {
+                
+                data.forEach(async function(triple,index){ //Uncaught SyntaxError: await is a reserved identifier
 
-                  //Objektua kudeatu
-                  kudeatuNodoak(triple['o'],i).then((data) => {
-                    var iObj = data
+                    i++;
+
+                    //Subjektua kudeatu
+                    var iSubj = await kudeatuNodoak(triple['s'],i);
+                    i++;
+                    console.log(i)
+                    //Objektua kudeatu
+                    var iObj = await kudeatuNodoak(triple['o'],i)
 
                     //Predikatua kudeatu
-                    var predikatua = {from:iSubj, to:iObj, label: getErlazioa(triple['p']), arrows:'to'};
-                    arrayEdges.push(predikatua)
+                    var predikatua = {from:iSubj, to:iObj, label: triple['p']};
+                    arrayEdges.push(predikatua);
+
                     if(i >= data.length*2){ //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da)
-                      //Bider 2 egiten da triple bakoitza subjektu eta objektu elementuak dituelako
-                      grafoaEraiki();
+                          //Bider 2 egiten da triple bakoitza subjektu eta objektu elementuak dituelako
+                          //grafoaEraiki();
+
                     }
-                  })
                 })
-			})
-	   	})
+            })
+        }
 
         function grafoaEraiki(){
             //In: -
             //Out: Grafoa
-
-          console.log(arrayNodes)
-          console.log(arrayEdges)
 
             //Zerrendak dataset bihurtu
             var nodes = new vis.DataSet(arrayNodes);
