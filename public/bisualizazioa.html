@@ -9,6 +9,7 @@
 
     	var arrayEdges = []; //Vis onartzen dituen ertzak gordetzen ditu
     	var arrayNodes = []; //Vis onartzen dituen nodoak gordetzen ditu
+        var arrayLabels = []; //Labelak gordetzeko arraya
 
         var i = 0;
 
@@ -16,26 +17,29 @@
     	
         async function aFuncionar() {
             getGuztia().then((data) => {
+                var txibatoa = false;
                 
-                data.forEach(async function(triple,index){ //Uncaught SyntaxError: await is a reserved identifier
+                data.forEach(async function(triple,index){ 
 
                     i++;
 
                     //Subjektua kudeatu
                     var iSubj = await kudeatuNodoak(triple['s'],i);
+
                     i++;
-                    console.log(i)
+                    
                     //Objektua kudeatu
                     var iObj = await kudeatuNodoak(triple['o'],i)
 
                     //Predikatua kudeatu
-                    var predikatua = {from:iSubj, to:iObj, label: triple['p']};
+                    var predikatua = {from:iSubj, to:iObj, label: getErlazioa(triple['p'])};
                     arrayEdges.push(predikatua);
 
-                    if(i >= data.length*2){ //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da)
-                          //Bider 2 egiten da triple bakoitza subjektu eta objektu elementuak dituelako
-                          //grafoaEraiki();
 
+                    if(i >= data.length*2 & !txibatoa){ //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da)
+                        //Bider 2 egiten da triple bakoitza subjektu eta objektu elementuak dituelako
+                        grafoaEraiki();
+                        txibatoa = true;
                     }
                 })
             })
@@ -44,6 +48,9 @@
         function grafoaEraiki(){
             //In: -
             //Out: Grafoa
+
+            console.log(arrayNodes)
+            console.log(arrayEdges)
 
             //Zerrendak dataset bihurtu
             var nodes = new vis.DataSet(arrayNodes);
@@ -56,8 +63,14 @@
   				height: '100%',
   				width: '100%',
    				physics: {
-    				enabled: false
-   				}
+    				enabled: false,
+                    repulsion: {
+                       nodeDistance: 400 // Put more distance between the nodes.
+                    }
+   				},
+                layout: { 
+                    improvedLayout: false 
+                }
 			};
 
 		    var data = {
@@ -66,15 +79,18 @@
 		    };
             
 		    var network = new vis.Network(container, data, options);
+
+            network.stabilize();
         }
 
 		async function kudeatuNodoak(izena, i){ //Subjektua eta objektua nodo bihurtu (igual hay que hacerla async)
             //In: Elementu baten URIa eta identifikatzaile zenbaki bat
             //Out: Elementu hori zerrenda batean gorde eha haren identifikatzailea bueltatzen du
 
-			var label = await getLabel(izena) //Lo separo pero me imagino que se podrá poner abajo
-            var nodoa = {id:i,label:label}
-            if(!arrayNodes.includes(nodoa)){ //Nodo berri bat agertzen bada
+			var labelIzena = await getLabel(izena) //Lo separo pero me imagino que se podrá poner abajo
+            var nodoa = {id:i,label:labelIzena}
+            if(!arrayLabels.includes(labelIzena)){ //Nodo berri bat agertzen bada
+                arrayLabels.push(labelIzena)
                 arrayNodes.push(nodoa);
                 return i;
             }
@@ -96,7 +112,14 @@
             //In: Predikatuaren URIa
             //Out: Predikatu horren erlazioa euskaraz
 
+
             var erlazioa = predikatua.split('/')[predikatua.split('/').length-1] //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/String/split
+
+            if(erlazioa.includes('#')){
+                erlazioa = erlazioa.split('#')[1];
+            }
+            
+            console.log(erlazioa)
             var emaitza = ''
 
             switch(erlazioa){ //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Statements/switch
@@ -133,7 +156,7 @@
                 case 'has_bank_account_in': 
                     emaitza = 'Banku kontuarekin';
                     break;
-                case 'works_for': 
+                case 'worksFor': 
                     emaitza = 'Langilea';
                     break;
                 case 'pays':
@@ -151,11 +174,14 @@
                 case 'gives':
                     emaitza = 'Emaile';
                     break;
-                case 'authors':
+                case 'author':
                     emaitza = 'Egilea';
                     break;
                 case 'mentions':
                     emaitza = 'Aipatu';
+                    break;
+                case 'participant':
+                    emaitza = 'Partaidea';
                     break;
                 default: //happens_in
                     emaitza = 'Gertatzen da'

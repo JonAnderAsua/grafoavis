@@ -12,7 +12,16 @@
     	var arrayEdges = []; //Vis onartzen dituen ertzak gordetzen ditu
     	var arrayNodes = []; //Vis onartzen dituen nodoak gordetzen ditu
 
-    	var i = 0;
+    	
+	   	function aIterar(data){ //https://stackoverflow.com/questions/35318442/how-to-pass-parameter-to-a-promise-function
+	   		return new Promise(() => {
+	   			
+					return true;
+	   		})
+	   	}
+
+	  async function aFuncionar(){
+	  	var i = 0;
 
 			//Tripleak atera eta kudeatu
     	getGuztia().then((data) => {
@@ -20,22 +29,17 @@
 	   		data.forEach(function(triple,index){
 	   			i++;
           //Subjektua kudeatu
-          kudeatuNodoak(triple['s'],i).then((data) => {
-          	var iSubj = data;
-          	i++;
+          var iSubj = await kudeatuNodoak(triple['s'],i)
+          i++;
 
-          	//Objektua kudeatu
-          	kudeatuNodoak(triple['o'],i).then((data) =>{
-          		var iObj = data;
-          		i++;
+          //Objektua kudeatu
+          var iObj = await kudeatuNodoak(triple['o'],i)
 
-          		//Predikatua kudeatu
-          		var predikatua = {from:iSubj, to:iObj, label: triple['p']};
-          		arrayEdges.push(predikatua)
+          //Predikatua kudeatu
+          var predikatua = {from:iSubj, to:iObj, label: triple['p']};
+          arrayEdges.push(predikatua);
 
-          		console.log(predikatua)
-          	})
-          });         
+          console.log(predikatua)        
 				}).then(() => {
 					console.log("Kaixo")
 				})
@@ -63,12 +67,7 @@
 				var network = new vis.Network(container, data, options);
 	   	})
 
-	   	function aIterar(data){ //https://stackoverflow.com/questions/35318442/how-to-pass-parameter-to-a-promise-function
-	   		return new Promise(() => {
-	   			
-					return true;
-	   		})
-	   	}
+	  }
 
 		async function kudeatuNodoak(izena, i){ //Subjektua eta objektua nodo bihurtu (igual hay que hacerla async)
 			var label = await getLabel(izena) //Lo separo pero me imagino que se podrá poner abajo
