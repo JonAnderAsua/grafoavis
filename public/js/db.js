@@ -1,7 +1,7 @@
 import * as d3 from "https://cdn.skypack.dev/d3-sparql";
 
 //Metodoak exportatzeko
-export {getType,getLabel,getComment,getGuztia}
+export {getType,getLabel,getComment,getGuztia,getImage}
 
 //Zein URIren kontra egingo diren eskaerak adierazi
 var uri = "http://jonander:7200/repositories/LaDonacion"
@@ -78,22 +78,6 @@ function getGuztia(){ //Aurreko metodoetan atera ez diren tripleak atera
 		PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 		select distinct ?s ?p ?o where { 
 			?s ?p ?o .
-			FILTER(?p  NOT IN (<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, 
-				<http://www.w3.org/2000/01/rdf-schema#subPropertyOf>,
-				<http://www.w3.org/2000/01/rdf-schema#subClassOf>,
-				<http://www.w3.org/2000/01/rdf-schema#label>,
-				<http://www.w3.org/2000/01/rdf-schema#comment>,
-				<http://proton.semanticweb.org/protonsys#transitiveOver>,
-				<http://www.w3.org/2000/01/rdf-schema#domain>,
-				<http://www.w3.org/2000/01/rdf-schema#range>,
-				<http://www.w3.org/2002/07/owl#inverseOf>))
-		}`
-
-	eskaera = `
-		PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-		PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-		select distinct ?s ?p ?o where { 
-			?s ?p ?o .
 			FILTER(?p  IN (<https://schema.org/parent>,
 						<https://schema.org/owns>,
 						<https://schema.org/spouse>,
@@ -109,13 +93,38 @@ function getGuztia(){ //Aurreko metodoetan atera ez diren tripleak atera
 						<http://ehu.eus/transparentrelations#controls>,
 						<http://ehu.eus/transparentrelations#manages>,
 						<http://ehu.eus/transparentrelations#has_bank_account_in>,
-						<http://ehu.eus/transparentrelations#happens_in>))
+						<http://ehu.eus/transparentrelations#happens_in>,
+						<http://ehu.eus/transparentrelations#sibling>,
+						<http://ehu.eus/transparentrelations#related_to>))
 		}
 	`
-	
+
 	//Eskaeraren exekuzioa eta haren promesaren kudeaketa
 	return d3.sparql(uri,eskaera).then((data) => {
 		return data;
+	})
+}
+
+function getImage(izena){
+	var wikidataUri = 'https://query.wikidata.org/bigdata/namespace/wdq/sparql'
+
+	var wikidataEskaera = `
+	SELECT ?person
+	WHERE
+	{
+		?person rdfs:label "`+izena+`"@es .
+	}
+
+	`
+
+	return d3.sparql(wikidataUri,wikidataEskaera).then((data) => {
+		console.log(data[0]['person'])
+		fetch(data[0]['person'])
+			.then(response => response.json())
+  			.then(data =>{
+  				var keyZero = Object.keys(data['entities'])[0];
+				console.log(data['entities'][keyZero])
+  			});
 	})
 }
 

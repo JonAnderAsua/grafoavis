@@ -5,13 +5,15 @@
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <script type="module">
 		//Liburutegien importazioa
-		import {getType,getLabel,getComment,getGuztia} from './js/db.js'
+		import {getType,getLabel,getComment,getGuztia,getImage} from './js/db.js'
 
     	var arrayEdges = []; //Vis onartzen dituen ertzak gordetzen ditu
     	var arrayNodes = []; //Vis onartzen dituen nodoak gordetzen ditu
         var arrayLabels = []; //Labelak gordetzeko arraya
 
         var i = 0;
+
+        getImage('Juan Carlos I de España');
 
 		aFuncionar();
     	
@@ -119,7 +121,6 @@
                 erlazioa = erlazioa.split('#')[1];
             }
             
-            console.log(erlazioa)
             var emaitza = ''
 
             switch(erlazioa){ //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Statements/switch
