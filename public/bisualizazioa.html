@@ -34,9 +34,8 @@
                     var iObj = await kudeatuNodoak(triple['o'],i)
 
                     //Predikatua kudeatu
-                    var predikatua = {from:iSubj, to:iObj, label: getErlazioa(triple['p'])};
-                    arrayEdges.push(predikatua);
 
+                    await sortuPredikatua(iSubj,iObj,triple['p']);
 
                     if(i >= data.length*2 & !txibatoa){ //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da)
                         //Bider 2 egiten da triple bakoitza subjektu eta objektu elementuak dituelako
@@ -83,6 +82,17 @@
 		    var network = new vis.Network(container, data, options);
 
             network.stabilize();
+        }
+
+        async function sortuPredikatua(iSubj,iObj,erlazioa){
+            let promesa = new Promise(function(resolve,reject){
+                var predikatua = {from:iSubj, to:iObj, label: getErlazioa(triple['p'])};
+                return predikatua;
+            })
+
+            promesa.then((data) => {
+                arrayEdges.push(predikatua);
+            })
         }
 
 		async function kudeatuNodoak(izena, i){ //Subjektua eta objektua nodo bihurtu (igual hay que hacerla async)
