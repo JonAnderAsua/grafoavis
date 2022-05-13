@@ -118,13 +118,24 @@ function getImage(izena){
 	`
 
 	return d3.sparql(wikidataUri,wikidataEskaera).then((data) => {
-		console.log(data[0]['person'])
-		fetch(data[0]['person'])
-			.then(response => response.json())
-  			.then(data =>{
-  				var keyZero = Object.keys(data['entities'])[0];
-				console.log(data['entities'][keyZero])
-  			});
+		var keyZero = Object.keys(data[0])[0];
+		var uriObjektua = data[0][keyZero]
+
+		var irudiEskaera = `
+		SELECT ?pic
+			WHERE
+			{
+			<`+uriObjektua+`> wdt:P18 ?pic
+			}
+		`
+
+		//https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service/queries/examples
+
+		return d3.sparql(wikidataUri,irudiEskaera).then((data) => {
+			var irudiUri = data[0]['pic'];
+			console.log(irudiUri);
+			return irudiUri;
+		})
 	})
 }
 

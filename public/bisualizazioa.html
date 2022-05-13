@@ -86,12 +86,12 @@
 
         async function sortuPredikatua(iSubj,iObj,erlazioa){
             let promesa = new Promise(function(resolve,reject){
-                var predikatua = {from:iSubj, to:iObj, label: getErlazioa(triple['p'])};
+                var predikatua = {from:iSubj, to:iObj, label: getErlazioa(erlazioa)};
                 return predikatua;
             })
 
             promesa.then((data) => {
-                arrayEdges.push(predikatua);
+                arrayEdges.push(data);
             })
         }
 
