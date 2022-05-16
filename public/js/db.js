@@ -83,7 +83,6 @@ function getGuztia(){ //Aurreko metodoetan atera ez diren tripleak atera
 						<https://schema.org/spouse>,
 						<https://schema.org/knows>,
 						<https://schema.org/mentions>,
-						<https://schema.org/participant>,
 						<https://schema.org/author>,
 						<https://schema.org/worksFor>,
 						<http://ehu.eus/transparentrelations#pays>,
@@ -98,6 +97,7 @@ function getGuztia(){ //Aurreko metodoetan atera ez diren tripleak atera
 						<http://ehu.eus/transparentrelations#related_to>))
 		}
 	`
+	//<https://schema.org/participant>,
 
 	//Eskaeraren exekuzioa eta haren promesaren kudeaketa
 	return d3.sparql(uri,eskaera).then((data) => {
