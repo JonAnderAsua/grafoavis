@@ -6,6 +6,9 @@
     <script type="module">
 		//Liburutegien importazioa
 		import {getType,getLabel,getComment,getGuztia,getImage} from './js/db.js'
+        import * as d3 from "https://cdn.skypack.dev/d3-sparql";
+
+        d3.select("p").text("Froga")
 
     	var arrayEdges = []; //Vis onartzen dituen ertzak gordetzen ditu
     	var arrayNodes = []; //Vis onartzen dituen nodoak gordetzen ditu
@@ -88,7 +91,7 @@
             if(!arrayLabels.includes(labelIzena)){ //Nodo berri bat agertzen bada
               arrayLabels.push(labelIzena)
               i++;
-              var nodoa = {id:i,label:labelIzena}
+              var nodoa = {id:i,label:labelIzena,shape:"circularImage",image: await getImage(labelIzena)}
               arrayNodes.push(nodoa);
               return i;
             }
@@ -197,5 +200,6 @@
   </head>
   <body>
     <div id="mynetwork"></div>
+    <p></p>
   </body>
 </html>
