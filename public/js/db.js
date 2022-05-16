@@ -82,7 +82,6 @@ function getGuztia(){ //Aurreko metodoetan atera ez diren tripleak atera
 						<https://schema.org/owns>,
 						<https://schema.org/spouse>,
 						<https://schema.org/knows>,
-						<https://schema.org/mentions>,
 						<https://schema.org/author>,
 						<https://schema.org/worksFor>,
 						<http://ehu.eus/transparentrelations#pays>,
