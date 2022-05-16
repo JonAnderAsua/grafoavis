@@ -8,7 +8,7 @@
 		import {getType,getLabel,getComment,getGuztia,getImage} from './js/db.js'
         import * as d3 from "https://cdn.skypack.dev/d3-sparql";
 
-        d3.select("p").text("Froga")
+        //d3.select("p").text("Froga")
 
     	var arrayEdges = []; //Vis onartzen dituen ertzak gordetzen ditu
     	var arrayNodes = []; //Vis onartzen dituen nodoak gordetzen ditu
@@ -30,20 +30,27 @@
 
         async function kudeatuTriplea(triple,luzera){
 
-          //Subjektua kudeatu
-          var iSubj = await kudeatuNodoak(triple['s'],i);
+          var erlazioa = getErlazioa(triple['p'])
 
-          //Objektua kudeatu
-          var iObj = await kudeatuNodoak(triple['o'],i)
+          if(erlazioa !== 'Aipatu') {
 
-          //Predikatua kudeatu
-          var predikatua = {from:iSubj, to:iObj, label: getErlazioa(triple['p'])};
-          arrayEdges.push(predikatua);
+            //Subjektua kudeatu
+            var iSubj = await kudeatuNodoak(triple['s'], i);
 
-          if(i >= 334 & !txibatoa){ //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da)
-            //Bider 2 egiten da triple bakoitza subjektu eta objektu elementuak dituelako
-            grafoaEraiki();
-            txibatoa = true;
+            //Objektua kudeatu
+            var iObj = await kudeatuNodoak(triple['o'], i)
+
+            //Predikatua kudeatu
+            var predikatua = {from: iSubj, to: iObj, label: erlazioa};
+            arrayEdges.push(predikatua);
+
+            console.log(i)
+
+            if (i >= 207 & !txibatoa) { //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da)
+              //Bider 2 egiten da triple bakoitza subjektu eta objektu elementuak dituelako
+              grafoaEraiki();
+              txibatoa = true;
+            }
           }
         }
 
@@ -52,6 +59,9 @@
             //Out: Grafoa
 
             //Zerrendak dataset bihurtu
+            console.log(arrayNodes);
+            console.log(arrayEdges);
+
             var nodes = new vis.DataSet(arrayNodes);
 			var edges = new vis.DataSet(arrayEdges);
 
@@ -91,7 +101,8 @@
             if(!arrayLabels.includes(labelIzena)){ //Nodo berri bat agertzen bada
               arrayLabels.push(labelIzena)
               i++;
-              var nodoa = {id:i,label:labelIzena,shape:"circularImage",image: await getImage(labelIzena)}
+              //var nodoa = {id:i,label:labelIzena,shape:"circularImage",image: await getImage(labelIzena)}
+              var nodoa = {id:i,label:labelIzena}
               arrayNodes.push(nodoa);
               return i;
             }
@@ -104,7 +115,7 @@
             //In: Elementu bat
             //Out: Elementu hori arrayNodes zerrendan bilatzen eta haren identifikaitzailea bueltatzen du
 
-            var emaitza = {id:0,label:'Error'} //Honela hasieratzen da 'por si las moscas'
+            var emaitza = "" //Honela hasieratzen da 'por si las moscas'
 		    emaitza = arrayNodes.find(x => x.label === subObjektua);
 		    return emaitza.id;
 		}
