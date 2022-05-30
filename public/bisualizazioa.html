@@ -5,10 +5,13 @@
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <script type="module">
 		//Liburutegien importazioa
-		import {getType,getLabel,getComment,getGuztia,getImage} from './js/db.js'
-        import * as d3 from "https://cdn.skypack.dev/d3-sparql";
+		import {getType,getLabel,getComment,getGuztia} from './js/db.js'
+        import * as d3 from "https://cdn.skypack.dev/d3@7";
 
-        //d3.select("p").text("Froga")
+        var myNetwork = d3.select("myNetwork");
+        myNetwork.on('click',function (){
+          console.log('Entra')
+        })
 
     	var arrayEdges = []; //Vis onartzen dituen ertzak gordetzen ditu
     	var arrayNodes = []; //Vis onartzen dituen nodoak gordetzen ditu
@@ -41,8 +44,10 @@
             var iObj = await kudeatuNodoak(triple['o'], i)
 
             //Predikatua kudeatu
-            var predikatua = {from: iSubj, to: iObj, label: erlazioa};
+            var predikatua = {from: iSubj, to: iObj, label: erlazioa, arrows: {from: {enabled:true, type:'arrow'}}};
             arrayEdges.push(predikatua);
+
+            console.log(i)
 
             if (i >= 139 & !txibatoa) { //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da)
               //Bider 2 egiten da triple bakoitza subjektu eta objektu elementuak dituelako
@@ -56,16 +61,24 @@
             //In: -
             //Out: Grafoa
 
-            //Zerrendak dataset bihurtu
-            console.log(arrayNodes);
-            console.log(arrayEdges);
+          console.log(arrayNodes)
+          console.log(arrayEdges)
 
+            //Zerrendak dataset bihurtu
             var nodes = new vis.DataSet(arrayNodes);
 			var edges = new vis.DataSet(arrayEdges);
 
 			// Sarea sortu
 		    var container = document.getElementById("mynetwork");
 		    var options = {
+                nodes: {
+                  shape: "dot",
+                  size:30,
+                  font: {
+                    size: 15,
+                    color:"#000000",
+                  }
+                },
 		    	autoResize: true,
   				height: '100%',
   				width: '100%',
@@ -94,13 +107,25 @@
             //In: Elementu baten URIa eta identifikatzaile zenbaki bat
             //Out: Elementu hori zerrenda batean gorde eha haren identifikatzailea bueltatzen du
 
-			var labelIzena = await getLabel(izena) //Lo separo pero me imagino que se podrá poner abajo
+			var labelIzena = await getLabel(izena);
+            var komentarioa = await getComment(izena);
+            var taldea = await getType(izena);
+
+            var azkenKomentarioa = ""
+            var zerrendaKomentarioa = komentarioa.split(" ");
+
+            for(var j = 0 ;j < zerrendaKomentarioa.length; j++){
+              azkenKomentarioa += zerrendaKomentarioa[j] + " ";
+              if(j % 10 == 0 && j != 0){
+                azkenKomentarioa += "\n"
+              }
+            }
 
             if(!arrayLabels.includes(labelIzena)){ //Nodo berri bat agertzen bada
               arrayLabels.push(labelIzena)
               i++;
               //var nodoa = {id:i,label:labelIzena,shape:"circularImage",image: await getImage(labelIzena)}
-              var nodoa = {id:i,label:labelIzena}
+              var nodoa = {id:i,label:labelIzena,title: azkenKomentarioa,group:taldea}
               arrayNodes.push(nodoa);
               return i;
             }
@@ -108,6 +133,33 @@
                 return getIndex(labelIzena);
             }
 		}
+
+        async function getTaldea(uriElementua){
+          var taldea = await getType(uriElementua);
+          console.log(taldea)
+
+          switch (taldea){
+            case 'https://schema.org/Organization':
+              return 0;
+              break;
+            case 'https://schema.org/Person':
+              return 1;
+              break;
+            case 'https://schema.org/Place':
+              return 2;
+              break;
+            case 'https://schema.org/Event':
+              return 3;
+              break;
+            case 'https://schema.org/Documentation':
+              return 4;
+              break;
+            default:
+              return 5;
+              break;
+          }
+
+        }
 
 	   	function getIndex(subObjektua){ //Nodo jakin baten id-a atera
             //In: Elementu bat

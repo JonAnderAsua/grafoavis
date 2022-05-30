@@ -1,7 +1,7 @@
 import * as d3 from "https://cdn.skypack.dev/d3-sparql";
 
 //Metodoak exportatzeko
-export {getType,getLabel,getComment,getGuztia,getImage}
+export {getType,getLabel,getComment,getGuztia}
 
 //Zein URIren kontra egingo diren eskaerak adierazi
 var uri = "http://jonander:7200/repositories/LaDonacion"
@@ -104,38 +104,5 @@ function getGuztia(){ //Aurreko metodoetan atera ez diren tripleak atera
 	})
 }
 
-function getImage(izena){
-	var wikidataUri = 'https://query.wikidata.org/bigdata/namespace/wdq/sparql'
-
-	var wikidataEskaera = `
-	SELECT ?person
-	WHERE
-	{
-		?person rdfs:label "`+izena+`"@es .
-	}
-
-	`
-
-	return d3.sparql(wikidataUri,wikidataEskaera).then((data) => {
-		var keyZero = Object.keys(data[0])[0];
-		var uriObjektua = data[0][keyZero]
-
-		var irudiEskaera = `
-		SELECT ?pic
-			WHERE
-			{
-			<`+uriObjektua+`> wdt:P18 ?pic
-			}
-		`
-
-		//https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service/queries/examples
-
-		return d3.sparql(wikidataUri,irudiEskaera).then((data) => {
-			var irudiUri = data[0]['pic'];
-			console.log(irudiUri);
-			return irudiUri;
-		})
-	})
-}
 
 
