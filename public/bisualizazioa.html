@@ -8,11 +8,6 @@
 		import {getType,getLabel,getComment,getGuztia} from './js/db.js'
         import * as d3 from "https://cdn.skypack.dev/d3@7";
 
-        var myNetwork = d3.select("myNetwork");
-        myNetwork.on('click',function (){
-          console.log('Entra')
-        })
-
     	var arrayEdges = []; //Vis onartzen dituen ertzak gordetzen ditu
     	var arrayNodes = []; //Vis onartzen dituen nodoak gordetzen ditu
         var arrayLabels = []; //Labelak gordetzeko arraya
@@ -44,10 +39,8 @@
             var iObj = await kudeatuNodoak(triple['o'], i)
 
             //Predikatua kudeatu
-            var predikatua = {from: iSubj, to: iObj, label: erlazioa, arrows: {from: {enabled:true, type:'arrow'}}};
+            var predikatua = {from: iSubj, to: iObj, label: erlazioa, arrows: {from: {enabled:true, type:'arrow'}},length:200};
             arrayEdges.push(predikatua);
-
-            console.log(i)
 
             if (i >= 139 & !txibatoa) { //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da)
               //Bider 2 egiten da triple bakoitza subjektu eta objektu elementuak dituelako
@@ -60,9 +53,6 @@
         function grafoaEraiki(){
             //In: -
             //Out: Grafoa
-
-          console.log(arrayNodes)
-          console.log(arrayEdges)
 
             //Zerrendak dataset bihurtu
             var nodes = new vis.DataSet(arrayNodes);
@@ -111,6 +101,10 @@
             var komentarioa = await getComment(izena);
             var taldea = await getType(izena);
 
+            var id = izena.split('/').at(-1)
+
+            var DIR = '/images/'
+
             var azkenKomentarioa = ""
             var zerrendaKomentarioa = komentarioa.split(" ");
 
@@ -121,11 +115,12 @@
               }
             }
 
+            azkenKomentarioa = "Izena: " + labelIzena + "\n" + azkenKomentarioa
+
             if(!arrayLabels.includes(labelIzena)){ //Nodo berri bat agertzen bada
               arrayLabels.push(labelIzena)
               i++;
-              //var nodoa = {id:i,label:labelIzena,shape:"circularImage",image: await getImage(labelIzena)}
-              var nodoa = {id:i,label:labelIzena,title: azkenKomentarioa,group:taldea}
+              var nodoa = {id:i,label:labelIzena,shape:"circularImage",image: DIR + id + ".jpg", brokenImage: 'https://cdn-icons-png.flaticon.com/512/16/16642.png',title: azkenKomentarioa,group:taldea}
               arrayNodes.push(nodoa);
               return i;
             }
@@ -136,7 +131,6 @@
 
         async function getTaldea(uriElementua){
           var taldea = await getType(uriElementua);
-          console.log(taldea)
 
           switch (taldea){
             case 'https://schema.org/Organization':
@@ -261,6 +255,9 @@
   </head>
   <body>
     <div id="mynetwork"></div>
-    <p></p>
+  <footer>
+    <h3>Erabilera-lizentzia</h3>
+    <p>Proiektu honetan erabilitako datuak erabat publikoak dira, eta inoiz ez da esan datu horietan agertzen den edozein pertsona edo erakunde ustelkeriaren errudun denik.</p>
+  </footer>
   </body>
 </html>
