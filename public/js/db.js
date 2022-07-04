@@ -70,6 +70,24 @@ function getComment(uriObjektua){ //Elementu baten commenta atera
 	});
 }
 
+function getUriFromLabel(label){
+	var eskaera = `
+		PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+		SELECT ?s WHERE {
+			?s rdfs:label "` + label + `"
+		}
+	`
+
+	return d3.sparql(uri,eskaera).then((data) => {
+		if(data.length > 0){
+			return data[0]['s']
+		}
+		else{
+			return ''
+		}
+	})
+})
+
 function getGuztia(){ //Aurreko metodoetan atera ez diren tripleak atera
 
 	//Eskaeraren adierazpena
