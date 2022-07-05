@@ -1,7 +1,7 @@
 import * as d3 from "https://cdn.skypack.dev/d3-sparql";
 
 //Metodoak exportatzeko
-export {getType,getLabel,getComment,getGuztia,getUriFromLabel}
+export {getType,getLabel,getComment,getGuztia,getUriFromLabel,getRelations}
 
 //Zein URIren kontra egingo diren eskaerak adierazi
 var uri = "http://jonander:7200/repositories/LaDonacion"
@@ -74,10 +74,9 @@ function getUriFromLabel(label){
 	var eskaera = `
 		PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 		SELECT ?s WHERE {
-			?s rdfs:label "` + label + `"
+			?s rdfs:label "` + label + `" .
 		}
 	`
-
 	return d3.sparql(uri,eskaera).then((data) => {
 		if(data.length > 0){
 			return data[0]['s']
@@ -93,7 +92,7 @@ function getRelations(uriObj){
 	PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 	PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 	select distinct ?s ?p ?o where { 
-		`+ uriObj +` ?p ?o .
+		<`+ uriObj +`> ?p ?o .
 		FILTER(?p  IN (<https://schema.org/parent>,
 					<https://schema.org/owns>,
 					<https://schema.org/spouse>,
@@ -112,9 +111,8 @@ function getRelations(uriObj){
 					<http://ehu.eus/transparentrelations#related_to>))
 	}
 	`
-
-	d3.sparql(uri,eskaera).then((data) => {
-		
+	return d3.sparql(uri,eskaera).then((data) => {
+		return data
 	})
 }
 
