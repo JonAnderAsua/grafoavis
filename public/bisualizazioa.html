@@ -26,15 +26,35 @@
         async function aBuscar(label){
           var subj = await getUriFromLabel(label)
           var predObj = await getRelations(subj)
-          console.log(predObj)
+
+          var luzera = getLuzera(predObj)
+          i = 0
+          for(var u = 0 ; u < predObj.length ; u ++){
+            console.log('Entra')
+            predObj[u]['s'] = subj
+            kudeatuTriplea(predObj[u],luzera)
+          }
         }
 
+        function getLuzera(data){
+          var arrayLag = []
+          for(var x = 0 ; x < data.length ; x++){
+            if(!arrayLag.includes(data[x]['s'])){
+              arrayLag.push(data[x]['s']);
+            }
+            if(!arrayLag.includes(data[x]['o'])){
+              arrayLag.push(data[x]['o']);
+            }
+          }
+          return arrayLag.length
+        }
     	
         async function aFuncionar() {
             getGuztia().then((data) => {
-                for(var j = 0 ; j < data.length ; j++){
-                    kudeatuTriplea(data[j],data.length);
-                }
+              var luzera = getLuzera(data)
+              for(var j = 0 ; j < data.length ; j++){
+                  kudeatuTriplea(data[j],luzera);
+              }
             })
 
         }
@@ -54,9 +74,10 @@
             //Predikatua kudeatu
             var predikatua = {from: iSubj, to: iObj, label: erlazioa, arrows: {from: {enabled:true, type:'arrow'}},length:200};
             arrayEdges.push(predikatua);
-            if (i >= 139 & !txibatoa) { //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da)
+            console.log(i)
+            if (i >= luzera & !txibatoa) { //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da)
               //Bider 2 egiten da triple bakoitza subjektu eta objektu elementuak dituelako
-              //grafoaEraiki();
+              grafoaEraiki();
               txibatoa = true;
             }
           }
