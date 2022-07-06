@@ -17,20 +17,30 @@
 
         aFuncionar();
 
+        function reset(){
+          arrayEdges = [];
+          arrayLabels = [];
+          arrayNodes = [];
+          i = 0;
+        }
+
         var bilatu = d3.select('#bilatu') //https://stackoverflow.com/questions/46919747/d3-select-versus-document-getelementbyid
         bilatu.on('click', function() {
           var label = document.getElementById("bilatzeko").value //https://stackoverflow.com/questions/39288562/how-to-get-value-of-html-element-in-javascript
           aBuscar(label)
         })
 
+        var ezabatu = d3.select('#ezabatu')
+        ezabatu.on('click', function(){
+          aFuncionar();
+        })
+
         async function aBuscar(label){
           var subj = await getUriFromLabel(label)
           var predObj = await getRelations(subj)
-
+          reset();
           var luzera = getLuzera(predObj)
-          i = 0
           for(var u = 0 ; u < predObj.length ; u ++){
-            console.log('Entra')
             predObj[u]['s'] = subj
             kudeatuTriplea(predObj[u],luzera)
           }
@@ -51,6 +61,7 @@
     	
         async function aFuncionar() {
             getGuztia().then((data) => {
+              reset()
               var luzera = getLuzera(data)
               for(var j = 0 ; j < data.length ; j++){
                   kudeatuTriplea(data[j],luzera);
