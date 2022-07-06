@@ -13,11 +13,10 @@
         var arrayLabels = []; //Labelak gordetzeko arraya
 
         var i = 0;
-        var txibatoa = false;
 
         aFuncionar();
 
-        function reset(){
+        function hasieratu(){
           arrayEdges = [];
           arrayLabels = [];
           arrayNodes = [];
@@ -38,7 +37,7 @@
         async function aBuscar(label){
           var subj = await getUriFromLabel(label)
           var predObj = await getRelations(subj)
-          reset();
+          hasieratu();
           var luzera = getLuzera(predObj)
           for(var u = 0 ; u < predObj.length ; u ++){
             predObj[u]['s'] = subj
@@ -61,7 +60,7 @@
     	
         async function aFuncionar() {
             getGuztia().then((data) => {
-              reset()
+              hasieratu()
               var luzera = getLuzera(data)
               for(var j = 0 ; j < data.length ; j++){
                   kudeatuTriplea(data[j],luzera);
@@ -85,11 +84,11 @@
             //Predikatua kudeatu
             var predikatua = {from: iSubj, to: iObj, label: erlazioa, arrows: {from: {enabled:true, type:'arrow'}},length:200};
             arrayEdges.push(predikatua);
+            console.log(luzera)
             console.log(i)
-            if (i >= luzera & !txibatoa) { //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da)
+            if (i >= luzera) { //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da)
               //Bider 2 egiten da triple bakoitza subjektu eta objektu elementuak dituelako
               grafoaEraiki();
-              txibatoa = true;
             }
           }
         }
