@@ -25,8 +25,8 @@
 
         var bilatu = d3.select('#bilatu') //https://stackoverflow.com/questions/46919747/d3-select-versus-document-getelementbyid
         bilatu.on('click', function() {
-          var label = document.getElementById("bilatzeko").value //https://stackoverflow.com/questions/39288562/how-to-get-value-of-html-element-in-javascript
-          aBuscar(label)
+          var labels = document.getElementById("bilatzeko").value //https://stackoverflow.com/questions/39288562/how-to-get-value-of-html-element-in-javascript
+          aBuscar(labels)
         })
 
         var ezabatu = d3.select('#ezabatu')
@@ -35,13 +35,21 @@
         })
 
         async function aBuscar(label){
-          var subj = await getUriFromLabel(label)
-          var predObj = await getRelations(subj)
+          var arrayBusqueda = []
+          var subjs = await getUriFromLabel(label)
+          console.log(subjs)
+          for(var n = 0 ; n < subjs.length ; n++){
+            var predObj = await getRelations(subjs[n]['s'])
+            for(var t = 0 ; t < predObj.length ; t++){
+              predObj[t]['s'] = subjs[n]
+              arrayBusqueda.push(predObj[t])
+            }
+          }
           hasieratu();
-          var luzera = getLuzera(predObj)
-          for(var u = 0 ; u < predObj.length ; u ++){
-            predObj[u]['s'] = subj
-            kudeatuTriplea(predObj[u],luzera)
+          var luzera = getLuzera(arrayBusqueda)
+          console.log(arrayBusqueda)
+          for(var u = 0 ; u < arrayBusqueda.length ; u ++){
+            kudeatuTriplea(arrayBusqueda[u],luzera)
           }
         }
 
@@ -84,8 +92,7 @@
             //Predikatua kudeatu
             var predikatua = {from: iSubj, to: iObj, label: erlazioa, arrows: {from: {enabled:true, type:'arrow'}},length:200};
             arrayEdges.push(predikatua);
-            console.log(luzera)
-            console.log(i)
+
             if (i >= luzera) { //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da)
               //Bider 2 egiten da triple bakoitza subjektu eta objektu elementuak dituelako
               grafoaEraiki();

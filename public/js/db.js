@@ -74,16 +74,13 @@ function getUriFromLabel(label){
 	var eskaera = `
 		PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 		SELECT ?s WHERE {
-			?s rdfs:label "` + label + `" .
+			?s rdfs:label ?o .FILTER regex(str(?o), "` + label +`").
 		}
 	`
+
+	console.log(eskaera)
 	return d3.sparql(uri,eskaera).then((data) => {
-		if(data.length > 0){
-			return data[0]['s']
-		}
-		else{
-			return ''
-		}
+		return data
 	})
 }
 
