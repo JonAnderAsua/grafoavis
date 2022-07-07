@@ -39,7 +39,6 @@
         async function aBuscar(label){
           var arrayBusqueda = []
           var subjs = await getUriFromLabel(label)
-          console.log(subjs)
           for(var n = 0 ; n < subjs.length ; n++){
             var predObj = await getRelations(subjs[n]['s'])
             for(var t = 0 ; t < predObj.length ; t++){
@@ -49,7 +48,6 @@
           }
           hasieratu();
           var luzera = getLuzera(arrayBusqueda)
-          console.log(arrayBusqueda)
           for(var u = 0 ; u < arrayBusqueda.length ; u ++){
             kudeatuTriplea(arrayBusqueda[u],luzera)
           }

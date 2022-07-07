@@ -78,7 +78,6 @@ function getUriFromLabel(label){
 		}
 	`
 
-	console.log(eskaera)
 	return d3.sparql(uri,eskaera).then((data) => {
 		return data
 	})
