@@ -143,6 +143,20 @@
             
 		    var network = new vis.Network(container, data, options);
 
+            network.on('click',function(properties){
+              var ids = properties.nodes;
+              var clickedNodes = nodes.get(ids);
+
+              var nodoa = clickedNodes[0]
+              var izenaLabel = d3.select('#izena')
+              var commentLabel = d3.select('#comment')
+
+              console.log(nodoa)
+
+              izenaLabel.text(nodoa['label'])
+              commentLabel.text(nodoa['title'])
+            });
+
             network.stabilize();
         }
 
@@ -168,7 +182,7 @@
               }
             }
 
-            azkenKomentarioa = "Izena: " + labelIzena + "\n" + azkenKomentarioa
+            // azkenKomentarioa = "Izena: " + labelIzena + "\n" + azkenKomentarioa
 
             if(!arrayLabels.includes(labelIzena)){ //Nodo berri bat agertzen bada
               arrayLabels.push(labelIzena)
@@ -316,15 +330,10 @@
     <div id="mynetwork"></div>
       <div style="display:flex; flex-direction: column; justify-content: left; align-items:stretch">
       <label>Izena:</label>
-       <label id="izena">Ahhh</label>
+       <label id="izena"></label>
         <label>Informazioa:</label>
-      <textarea id="comment" readonly="True" rows="20">Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea>
+      <textarea id="comment" readonly="True" rows="20"> </textarea>
       </div>
-
-
-
-
     </div>
   <footer>
     <h3>Erabilera-lizentzia</h3>
