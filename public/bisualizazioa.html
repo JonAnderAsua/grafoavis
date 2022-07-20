@@ -93,6 +93,8 @@
             var predikatua = {from: iSubj, to: iObj, label: erlazioa, arrows: {from: {enabled:true, type:'arrow'}},length:200};
             arrayEdges.push(predikatua);
 
+            console.log(i)
+
             if (i >= luzera && !txibatoa) { //Pixkat gualtrapada bat da baina horrela egin behar dut grafoa elementu guztietatik pasa ostean grafoa eraikitzeko (frogatu behar da)
               //Bider 2 egiten da triple bakoitza subjektu eta objektu elementuak dituelako
               txibatoa = true;
@@ -310,7 +312,20 @@
   </form>
     <button id="bilatu" type="button">Bilatu</button>
     <button id="ezabatu" type="button">Ezabatu</button>
+    <div style="display:flex; flex-direction: row; justify-content: left; align-items:stretch">
     <div id="mynetwork"></div>
+      <div style="display:flex; flex-direction: column; justify-content: left; align-items:stretch">
+      <label>Izena:</label>
+       <label id="izena">Ahhh</label>
+        <label>Informazioa:</label>
+      <textarea id="comment" readonly="True" rows="20">Lorem ipsum dolor sit amet, consectetur
+        adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea>
+      </div>
+
+
+
+
+    </div>
   <footer>
     <h3>Erabilera-lizentzia</h3>
     <p>Proiektu honetan erabilitako datuak erabat publikoak dira, eta inoiz ez da esan datu horietan agertzen den edozein pertsona edo erakunde ustelkeriaren errudun denik.</p>
