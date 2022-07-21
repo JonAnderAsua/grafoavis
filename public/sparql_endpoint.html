@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Network</title>
+<!--    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>-->
+    <script type="module">
+        //Liburutegien importazioa
+        import * as d3 from "https://cdn.skypack.dev/d3@7";
+
+        var botoia = d3.select('#eskaeraButton');
+        var taula = d3.select('#taula');
+        var eskaera = d3.select('#eskaera');
+
+        botoia.on('click', function() {
+            console.log(eskaera.node().value)
+        })
+
+
+    </script>
+    <style type="text/css">
+
+    </style>
+</head>
+<body>
+<div style="display:flex; flex-direction: column; justify-content: left; align-items:stretch">
+    <label>Eskaera:</label>
+    <textarea rows="5" autocomplete="on" cols="60" id="eskaera"></textarea>
+</div>
+<button id="eskaeraButton">Eskera egin</button>
+<table id="taula">
+    <tr>
+        <th>Company</th>
+        <th>Contact</th>
+        <th>Country</th>
+    </tr>
+    <tr>
+        <td>Alfreds Futterkiste</td>
+        <td>Maria Anders</td>
+        <td>Germany</td>
+    </tr>
+    <tr>
+        <td>Centro comercial Moctezuma</td>
+        <td>Francisco Chang</td>
+        <td>Mexico</td>
+    </tr>
+</table>
+</body>
+</html>

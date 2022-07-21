@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@innotrade/enapso-graphdb-client": "^1.8.6",
+    "@triply/yasgui": "^4.2.26",
     "serve": "^13.0.2",
     "vis": "^4.21.0-EOL"
   }
