@@ -150,11 +150,13 @@
               var nodoa = clickedNodes[0]
               var izenaLabel = d3.select('#izena')
               var commentLabel = d3.select('#comment')
-
-              console.log(nodoa)
+              var irudia = d3.select('#irudia')
 
               izenaLabel.text(nodoa['label'])
               commentLabel.text(nodoa['title'])
+              console.log(nodoa['image'])
+              irudia.attr('src', nodoa['image'])
+
             });
 
             network.stabilize();
@@ -181,8 +183,6 @@
                 azkenKomentarioa += "\n"
               }
             }
-
-            // azkenKomentarioa = "Izena: " + labelIzena + "\n" + azkenKomentarioa
 
             if(!arrayLabels.includes(labelIzena)){ //Nodo berri bat agertzen bada
               arrayLabels.push(labelIzena)
@@ -332,7 +332,8 @@
       <label>Izena:</label>
        <label id="izena"></label>
         <label>Informazioa:</label>
-      <textarea id="comment" readonly="True" rows="20"> </textarea>
+      <textarea id="comment" readonly="True" rows="15"> </textarea>
+        <img src="" id="irudia" style="width:300px;height:300px"/>
       </div>
     </div>
   <footer>
