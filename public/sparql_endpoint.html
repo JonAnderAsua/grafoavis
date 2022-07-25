@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <title>SPARQL Endpoint</title>
+    <link rel="stylesheet" href="./css/endpoint.css">
 <!--    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>-->
     <script type="module">
         //Liburutegien importazioa
@@ -9,50 +10,56 @@
         import {eskaeraEgin} from './js/db.js'
 
         var botoia = d3.select('#eskaeraButton');
-        var goiburuak = d3.select('#goiburuak');
+        // var goiburuak = d3.select('#goiburuak');
+
         var parametroak = d3.select('#params');
         var baldintza = d3.select('#eskaera');
         var taula = d3.select('#taula')
+        var errenkadak = d3.select('#errenkadak')
 
-        botoia.on('click', function() {
-            var eskaera = 'SELECT ' + parametroak.node().value + ' WHERE{ ' + baldintza.node().value + ' }'
 
+            botoia.on('click', async function () {
+
+            garbituTaula();
+            var eskaera = 'SELECT ' + parametroak.node().value + ' WHERE{ ' + baldintza.node().value + ' }';
+
+            //Goiburuak ezarri
             var goiburuPar = parametroak.node().value.split(' ')
+            var goiburuZer = [];
+            var goiburuak = taula.append('tr');
 
-            //Goiburuak ezarri
-            //for(var i = 0; i < goiburuPar.length; i++){
-                //goiburuak.append('th').text(goiburuPar[i])
-            //}
-
-            emaitzaEskaera = await eskaeraBurutu(eskaera);
-            var goiburuak = []
-
-            //Goiburuak ezarri
-            emaitzaEskaera.forEach();
-            for(var i = 0; i < Object.keys(emaitzaEskaera) ; i++){
-                goiburuak.push(Object.keys(emaitzaEskaera)[i]) 
-                goiburuak.append('th').text(Object.keys(emaitzaEskaera)[i]);
+            for(var i = 0; i < goiburuPar.length; i++){
+                goiburuZer.push(goiburuPar[i])
+                goiburuak.append('th').text(goiburuPar[i])
             }
 
-            //Taulako elementuak ezarri
-            for(var j=0 ; j < emaitzaEskaera.length; j++){
-                var tr = taula.append('tr');
-                var itema = emaitzaEskaera[j];
-                for(var u=0; u < itema.length ; u++){
-                    tr.append('th').text(itema['u']);
+            try{
+                var emaitzaEskaera = await eskaeraBurutu(eskaera);
+
+                //Taulako elementuak ezarri
+                for (var j = 0; j < emaitzaEskaera.length; j++) {
+                    var tr = taula.append('tr');
+                    var itema = emaitzaEskaera[j];
+                    for (var u = 0; u < goiburuZer.length; u++) {
+                        tr.append('td').text(itema[goiburuZer[u].replace('?','')]);
+                    }
                 }
             }
+            catch (e){
+                taula.text('SPARQL eskaeran errore bat gertatu da...')
+            }
+
 
         })
-        async function eskaeraBurutu(eskaera){
-            return eskaeraEgin(eskaera);
+
+        function garbituTaula(){
+            taula.html('')
         }
 
-
+        async function eskaeraBurutu(eskaera){
+                return eskaeraEgin(eskaera);
+        }
     </script>
-    <style type="text/css">
-
-    </style>
 </head>
 <body>
 <div style="display:flex; flex-direction: column; justify-content: left; align-items:stretch">
@@ -66,21 +73,7 @@
 </div>
 <button id="eskaeraButton">Eskera egin</button>
 <table id="taula">
-    <tr id="goiburuak">
-<!--        <th>Company</th>-->
-<!--        <th>Contact</th>-->
-<!--        <th>Country</th>-->
-    </tr>
-<!--    <tr>-->
-<!--        <td>Alfreds Futterkiste</td>-->
-<!--        <td>Maria Anders</td>-->
-<!--        <td>Germany</td>-->
-<!--    </tr>-->
-<!--    <tr>-->
-<!--        <td>Centro comercial Moctezuma</td>-->
-<!--        <td>Francisco Chang</td>-->
-<!--        <td>Mexico</td>-->
-    </tr>
+    <thead id="goiburuak"></thead>
 </table>
 </body>
 </html>

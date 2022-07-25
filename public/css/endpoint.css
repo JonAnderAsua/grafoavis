@@ -1,0 +1,55 @@
+tr th{
+    font-weight:bold;
+}
+tr th, tr td{
+    padding:5px;
+}
+th{
+    border: 5px solid #C1DAD7;
+}
+td{
+    border: 5px solid #C1DAD7;
+}
+.c1{
+    background:#4b8c74;
+}
+.c2{
+    background:#74c476;
+}
+.c3{
+    background:#a4e56d;
+}
+.c4{
+    background:#cffc83;
+}
+label{
+    font-family: aakar;
+}
+textarea {
+    font-family: aakar;
+    border: 5px solid #C1DAD7;
+    width: 400px;
+}
+table{
+    width: 400px;
+    font-family: aakar;
+}
+
+button {
+    /*margin-top: -30px;*/
+    position: relative;
+    overflow: hidden;
+    -webkit-transition: background 400ms;
+    transition: background 400ms;
+    color: white;
+    background-color: lightblue;
+    padding: 1em 2rem;
+    font-family: aakar;
+    /*font-size: 1.5rem;*/
+    outline: 0;
+    border: 0;
+    border-radius: 0.25rem;
+    -webkit-box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
