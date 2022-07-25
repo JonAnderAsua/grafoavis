@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Network</title>
+    <title>SPARQL Endpoint</title>
 <!--    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>-->
     <script type="module">
         //Liburutegien importazioa
         import * as d3 from "https://cdn.skypack.dev/d3@7";
+        import {eskaeraEgin} from './js/db.js'
 
         var botoia = d3.select('#eskaeraButton');
         var goiburuak = d3.select('#goiburuak');
@@ -19,11 +20,33 @@
             var goiburuPar = parametroak.node().value.split(' ')
 
             //Goiburuak ezarri
-            for(var i = 0; i < goiburuPar.length; i++){
-                goiburuak.append('th').text(goiburuPar[i])
+            //for(var i = 0; i < goiburuPar.length; i++){
+                //goiburuak.append('th').text(goiburuPar[i])
+            //}
+
+            emaitzaEskaera = await eskaeraBurutu(eskaera);
+            var goiburuak = []
+
+            //Goiburuak ezarri
+            emaitzaEskaera.forEach();
+            for(var i = 0; i < Object.keys(emaitzaEskaera) ; i++){
+                goiburuak.push(Object.keys(emaitzaEskaera)[i]) 
+                goiburuak.append('th').text(Object.keys(emaitzaEskaera)[i]);
+            }
+
+            //Taulako elementuak ezarri
+            for(var j=0 ; j < emaitzaEskaera.length; j++){
+                var tr = taula.append('tr');
+                var itema = emaitzaEskaera[j];
+                for(var u=0; u < itema.length ; u++){
+                    tr.append('th').text(itema['u']);
+                }
             }
 
         })
+        async function eskaeraBurutu(eskaera){
+            return eskaeraEgin(eskaera);
+        }
 
 
     </script>

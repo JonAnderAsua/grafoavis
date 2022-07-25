@@ -1,7 +1,7 @@
 import * as d3 from "https://cdn.skypack.dev/d3-sparql";
 
 //Metodoak exportatzeko
-export {getType,getLabel,getComment,getGuztia,getUriFromLabel,getRelations}
+export {getType,getLabel,getComment,getGuztia,getUriFromLabel,getRelations,eskaeraEgin}
 
 //Zein URIren kontra egingo diren eskaerak adierazi
 var uri = "http://jonander:7200/repositories/LaDonacion"
@@ -26,6 +26,12 @@ function getType(uriObjektua){ //Elementu baten typea atera
 		}
 	});
 
+}
+
+function eskaeraEgin(eskaeraOrokorra){
+	return d3.sparql(uri,eskaeraOrokorra).then((data) => {
+		return data;
+	})
 }
 
 function getLabel(uriObjektua){ //Elementu baten labela atera
