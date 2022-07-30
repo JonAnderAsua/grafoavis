@@ -86,13 +86,10 @@ h2{
     
 }
 
-div{
-    align-self: baseline;
+td{
+    max-width: 500px;
 }
 
-body{
-    align-items: center;
-}
 
 
 
