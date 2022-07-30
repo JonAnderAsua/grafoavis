@@ -62,18 +62,21 @@
     </script>
 </head>
 <body>
-<div style="display:flex; flex-direction: column; justify-content: left; align-items:stretch">
-    <div style="display:flex; flex-direction: row; justify-content: left; align-items:stretch">
-        <label>SELECT&nbsp;</label>
-        <input type="text" id="params" value="">
+    <h1>Ustelkeria grafoa</h1>
+    
+
+    <div style="display:flex; flex-direction: column; justify-content: left; align-items:left">
+        <div style="display:flex; flex-direction: row; justify-content: left; align-items:left">
+            <label>SELECT&nbsp;</label>
+            <input type="text" id="params" value="">
+        </div>
+        <label>WHERE{</label>
+        <textarea rows="5" autocomplete="on" cols="60" id="eskaera"></textarea>
+        <label>}</label>
     </div>
-    <label>WHERE{</label>
-    <textarea rows="5" autocomplete="on" cols="60" id="eskaera"></textarea>
-    <label>}</label>
-</div>
-<button id="eskaeraButton">Eskera egin</button>
-<table id="taula">
-    <thead id="goiburuak"></thead>
-</table>
+    <button id="eskaeraButton">Eskera egin</button>
+    <table id="taula">
+        <thead id="goiburuak"></thead>
+    </table>
 </body>
 </html>
