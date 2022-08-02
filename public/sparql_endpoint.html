@@ -3,14 +3,12 @@
 <head>
     <title>SPARQL Endpoint</title>
     <link rel="stylesheet" href="./css/endpoint.css">
-<!--    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>-->
     <script type="module">
         //Liburutegien importazioa
         import * as d3 from "https://cdn.skypack.dev/d3@7";
         import {eskaeraEgin} from './js/db.js'
 
         var botoia = d3.select('#eskaeraButton');
-        // var goiburuak = d3.select('#goiburuak');
 
         var parametroak = d3.select('#params');
         var baldintza = d3.select('#eskaera');

@@ -1,0 +1,37 @@
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(45deg, #49a09d, #5f2c82);
+    font-family: sans-serif;
+    font-weight: 100;
+}
+
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+#mynetwork{
+    background-color: white;
+}
+textarea{
+    width: 500px;
+    border-radius: 15px;
+}
+
+input{
+    border-radius: 15px;
+}
+
+label{
+    color: white
+}
+
+h1,h2,h3,p{
+    color: white;
+}

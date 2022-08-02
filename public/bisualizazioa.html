@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <title>Network</title>
+    <link rel="stylesheet" href="./css/bisualizazioa.css">
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <script type="module">
 		//Liburutegien importazioa
@@ -316,6 +317,11 @@
     </style>
   </head>
   <body>
+  <div>
+    <h1>Ustelkeriaren grafoa</h1>
+    <h3><a href="./sparql_endpoint.html">SPARQL Endpointa</a></h3>
+  </div>
+  <div>
   <form>
     <input type="text" id="bilatzeko" name="bilatzeko" />
   </form>
@@ -328,9 +334,11 @@
        <label id="izena"></label>
         <label>Informazioa:</label>
       <textarea id="comment" readonly="True" rows="15"> </textarea>
-        <img src="" id="irudia" style="width:300px;height:300px"/>
+        <label>Irudia:</label>
+        <img src="" id="irudia" style="width:500px;height:500px"/>
       </div>
     </div>
+  </div>
   <footer>
     <h3>Erabilera-lizentzia</h3>
     <p>Proiektu honetan erabilitako datuak erabat publikoak dira, eta inoiz ez da esan datu horietan agertzen den edozein pertsona edo erakunde ustelkeriaren errudun denik.</p>
