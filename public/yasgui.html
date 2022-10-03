@@ -9,20 +9,31 @@
         }
         body {
             margin: 0;
-            background: linear-gradient(45deg, #49a09d, #5f2c82);
+            background: linear-gradient(45deg, lightgreen, green);
             font-family: sans-serif;
             font-weight: 100;
         }
         h1,h2,h3,p,label{
             color: white;
         }
+        #grafoa{
+            border-radius: 5px;
+            padding: 10px 7px;
+            text-decoration: none;
+            color: black;
+            background-color: greenyellow ;
+            margin: 5px;
+        }
     </style>
 </head>
 <body>
     <div>
         <h1>Ustelkeria grafoa</h1>
-        <h3><a href="./bisualizazioa.html">Grafoa</a></h3>
+
     </div>
+    <a href="./bisualizazioa.html" target="_blank" id="grafoa">Grafoa</a>
+
+    <hr style="border:5px;"><hr style="border:0px;">
     <div id="yasgui"></div>
     <script>
         const yasgui = new Yasgui(document.getElementById("yasgui"), {

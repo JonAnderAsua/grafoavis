@@ -11,7 +11,7 @@ body {
 }
 
 .container {
-    position: absolute;
+    position: static;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -26,8 +26,22 @@ textarea{
 
 input{
     border-radius: 15px;
+    margin: 150px;
 }
 
 h1,h2,h3,p,label{
     color: white;
+}
+
+a{
+    border-radius: 5px;
+    padding: 10px 7px;
+    text-decoration: none;
+    color: black;
+    background-color: lightblue ;
+    margin: 5px;
+}
+
+img {
+    width: 100%;
 }
