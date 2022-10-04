@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>SPARQL Endpointa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" ></script>
     <link href="https://unpkg.com/@triply/yasgui/build/yasgui.min.css" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/@triply/yasgui/build/yasgui.min.js"></script>
     <style>
@@ -27,17 +30,17 @@
     </style>
 </head>
 <body>
-    <div>
-        <h1>Ustelkeria grafoa</h1>
-
+    <div class="text-center">
+<!--        <h1>Ustelkeria grafoa</h1>-->
+        <img src="./__Balizko_ustelkeria_kasuak_-removebg-preview.png" style="max-height: 250px; max-width: 250px" />
     </div>
     <a href="./bisualizazioa.html" target="_blank" id="grafoa">Grafoa</a>
 
     <hr style="border:5px;"><hr style="border:0px;">
-    <div id="yasgui"></div>
+    <div id="yasgui" class="col-sm"></div>
     <script>
         const yasgui = new Yasgui(document.getElementById("yasgui"), {
-            requestConfig: { endpoint: "http://jonander:7200/repositories/LaDonacion/statements"},
+            requestConfig: { endpoint: "http://localhost:7200/repositories/ustelkeria/statements"},
             copyEndpointOnNewTab: false,
         });
 

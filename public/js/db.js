@@ -4,7 +4,7 @@ import * as d3 from "https://cdn.skypack.dev/d3-sparql";
 export {getType,getLabel,getComment,getGuztia,getUriFromLabel,getRelations,eskaeraEgin}
 
 //Zein URIren kontra egingo diren eskaerak adierazi
-var uri = "http://jonander:7200/repositories/LaDonacion"
+var uri = "http://localhost:7200/repositories/ustelkeria"
 
 function getType(uriObjektua){ //Elementu baten typea atera
 
