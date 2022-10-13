@@ -146,7 +146,9 @@
             
 		    var network = new vis.Network(container, data, options);
 
-            network.on('click',function(properties){
+            network.on('click', async function(properties){
+
+
               var ids = properties.nodes;
               var clickedNodes = nodes.get(ids);
 
@@ -154,10 +156,12 @@
               var izenaLabel = d3.select('#izena')
               var commentLabel = d3.select('#comment')
               var irudia = d3.select('#irudia')
-
+              var uria = d3.select("#uri")
+              var uri = await getUriFromLabel(nodoa['label'])
               izenaLabel.text(nodoa['label'])
               commentLabel.text(nodoa['title'])
               irudia.attr('src', nodoa['image'])
+              uria.text(uri[0]['s'])
             });
             network.stabilize();
         }
@@ -345,6 +349,8 @@
       <div style="display:flex; flex-direction: column; justify-content: left; align-items:stretch">
       <label>Izena:</label>
        <label id="izena"></label>
+        <label>URIa:</label>
+        <label id="uri"></label>
         <label>Informazioa:</label>
       <textarea id="comment" readonly="True" rows="5" class="responsive-font-example"> </textarea>
         <label>Irudia:</label>
