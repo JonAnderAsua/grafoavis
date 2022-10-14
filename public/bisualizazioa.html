@@ -161,6 +161,8 @@
               izenaLabel.text(nodoa['label'])
               commentLabel.text(nodoa['title'])
               irudia.attr('src', nodoa['image'])
+              uria.attr('href', uri[0]['s'])
+              uria.text('a')
               uria.text(uri[0]['s'])
             });
             network.stabilize();
@@ -326,7 +328,6 @@
   </head>
   <body>
   <div class="text-center">
-<!--    <h1>Balizko ustelkeria grafoa</h1>-->
     <img src="./logo.png" style="max-height: 250px; max-width: 250px" />
   </div>
 <!--  <h1>Ustelkeria grafoa</h1>-->
@@ -350,7 +351,7 @@
       <label>Izena:</label>
        <label id="izena"></label>
         <label>URIa:</label>
-        <label id="uri"></label>
+        <a id="uri"></a>
         <label>Informazioa:</label>
       <textarea id="comment" readonly="True" rows="5" class="responsive-font-example"> </textarea>
         <label>Irudia:</label>
