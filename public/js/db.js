@@ -3,9 +3,7 @@ import * as d3 from "https://cdn.skypack.dev/d3-sparql";
 //Metodoak exportatzeko
 export {getType,getLabel,getComment,getGuztia,getUriFromLabel,getRelations,eskaeraEgin}
 
-//Zein URIren kontra egingo diren eskaerak adierazi
-var uri = "http://localhost:7200/repositories/ustelkeria"
-
+var uri = 'http://localhost:7200/repositories/ustelkeria' //Aldatu behar da
 function getType(uriObjektua){ //Elementu baten typea atera
 
 	//Eskaeraren adierazpena
