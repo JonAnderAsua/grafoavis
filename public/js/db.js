@@ -4,6 +4,7 @@ import * as d3 from "https://cdn.skypack.dev/d3-sparql";
 export {getType,getLabel,getComment,getGuztia,getUriFromLabel,getRelations,eskaeraEgin}
 
 var uri = 'http://localhost:7200/repositories/ustelkeria' //Aldatu behar da
+
 function getType(uriObjektua){ //Elementu baten typea atera
 
 	//Eskaeraren adierazpena

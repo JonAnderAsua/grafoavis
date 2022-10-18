@@ -38,8 +38,9 @@
     <hr style="border:5px;"><hr style="border:0px;">
     <div id="yasgui" class="col-sm"></div>
     <script>
+        var uri = "http://localhost:7200/repositories/ustelkeria"; //Aldatu behar da
         const yasgui = new Yasgui(document.getElementById("yasgui"), {
-            requestConfig: { endpoint: "http://localhost:7200/repositories/ustelkeria"},
+            requestConfig: { endpoint: uri},
             copyEndpointOnNewTab: false,
         });
 

@@ -11,6 +11,7 @@
   "dependencies": {
     "@innotrade/enapso-graphdb-client": "^1.8.6",
     "@triply/yasgui": "^4.2.26",
+    "fs": "^0.0.1-security",
     "serve": "^13.0.2",
     "vis": "^4.21.0-EOL"
   }
