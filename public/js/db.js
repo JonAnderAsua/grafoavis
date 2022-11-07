@@ -101,6 +101,7 @@ function getRelations(uriObj){
 					<https://schema.org/knows>,
 					<https://schema.org/author>,
 					<https://schema.org/worksFor>,
+					<https://schema.org/participant>,
 					<http://ehu.eus/transparentrelations#pays>,
 					<http://ehu.eus/transparentrelations#registered_in>,
 					<http://ehu.eus/transparentrelations#beneficiary_of>,
@@ -113,7 +114,10 @@ function getRelations(uriObj){
 					<http://ehu.eus/transparentrelations#related_to>))
 	}
 	`
+
+	console.log(eskaera)
 	return d3.sparql(uri,eskaera).then((data) => {
+		console.log(data)
 		return data
 	})
 }

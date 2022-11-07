@@ -47,7 +47,7 @@
           for(var n = 0 ; n < subjs.length ; n++){
             var predObj = await getRelations(subjs[n]['s'])
             for(var t = 0 ; t < predObj.length ; t++){
-              predObj[t]['s'] = subjs[n]['s']
+              // predObj[t]['s'] = subjs[n]['s']
               arrayBusqueda.push(predObj[t])
             }
           }
