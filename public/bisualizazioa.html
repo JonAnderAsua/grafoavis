@@ -328,7 +328,7 @@
   </head>
   <body>
   <div class="text-center">
-    <img src="./logo.png" style="max-height: 250px; max-width: 250px" />
+    <img src="./logo.png" style="max-height: 150px; max-width: 150px" />
   </div>
 <!--  <h1>Ustelkeria grafoa</h1>-->
   <a href="./yasgui.html" target="_blank">SPARQL Endpointa</a>
@@ -338,15 +338,16 @@
   <div >
 
   </div>
-  <div >
+  <div class="column justify-content-between">
     <input type="text" id="bilatzeko" name="bilatzeko" />
     <button id="bilatu" type="button">Bilatu</button>
     <button id="ezabatu" type="button">Ezabatu</button>
 
 <!--    <hr style="border:1px;"><hr style="border:0px;">-->
+    <br></br>
+    <div style="display:flex; flex-direction: row; justify-content: space-evenly; align-items:stretch">
+    <div id="mynetwork" class="col-sm"></div>
 
-    <div style="display:flex; flex-direction: row; justify-content: left; align-items:stretch">
-    <div id="mynetwork" class="col-sm" ></div>
       <div style="display:flex; flex-direction: column; justify-content: left; align-items:stretch">
       <label>Izena:</label>
        <label id="izena"></label>
@@ -359,6 +360,7 @@
       </div>
     </div>
   </div>
+  <br></br>
   <footer>
     <h3>Erabilera-lizentzia</h3>
     <p>Proiektu honetan erabilitako datuak erabat publikoak dira, eta inoiz ez da esan datu horietan agertzen den edozein pertsona edo erakunde ustelkeriaren errudun denik.</p>

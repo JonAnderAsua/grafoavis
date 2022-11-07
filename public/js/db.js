@@ -93,7 +93,8 @@ function getRelations(uriObj){
 	PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 	PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 	select distinct ?s ?p ?o where { 
-		<`+ uriObj +`> ?p ?o .
+		?s ?p ?o .
+		FILTER(?s = <`+uriObj+`> || ?o = <`+uriObj+`>)
 		FILTER(?p  IN (<https://schema.org/parent>,
 					<https://schema.org/owns>,
 					<https://schema.org/spouse>,
@@ -131,6 +132,7 @@ function getGuztia(){ //Aurreko metodoetan atera ez diren tripleak atera
 						<https://schema.org/knows>,
 						<https://schema.org/author>,
 						<https://schema.org/worksFor>,
+						<https://schema.org/participant>,
 						<http://ehu.eus/transparentrelations#pays>,
 						<http://ehu.eus/transparentrelations#registered_in>,
 						<http://ehu.eus/transparentrelations#beneficiary_of>,
